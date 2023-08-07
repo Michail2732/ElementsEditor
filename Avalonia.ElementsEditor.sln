@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33815.320
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElementsEditor", "ElementsEditor\ElementsEditor.csproj", "{55306985-7C53-4C55-978F-31E7A395F526}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElementsEditor.Sample", "ElementsEditor.Sample\ElementsEditor.Sample.csproj", "{885464DB-E715-4C6F-93D1-4F42053E0467}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{55306985-7C53-4C55-978F-31E7A395F526}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55306985-7C53-4C55-978F-31E7A395F526}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55306985-7C53-4C55-978F-31E7A395F526}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55306985-7C53-4C55-978F-31E7A395F526}.Release|Any CPU.Build.0 = Release|Any CPU
+		{885464DB-E715-4C6F-93D1-4F42053E0467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{885464DB-E715-4C6F-93D1-4F42053E0467}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{885464DB-E715-4C6F-93D1-4F42053E0467}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{885464DB-E715-4C6F-93D1-4F42053E0467}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F5A8F1FF-E477-4DCD-9105-ABD0C82D8E46}
+	EndGlobalSection
+EndGlobal

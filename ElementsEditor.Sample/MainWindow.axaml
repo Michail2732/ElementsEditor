@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:sys="clr-namespace:System;assembly=netstandard"
+		xmlns:models="clr-namespace:ElementsEditor.Sample.Models;assembly=ElementsEditor.Sample"
+		xmlns:viewModels="clr-namespace:ElementsEditor.Sample.ViewModels;assembly=ElementsEditor.Sample"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ElementsEditor.Sample.MainWindow"
+		x:DataType="viewModels:MainWindowViewModel"
+        Title="ElementsEditor.Sample">
+	<ListBox ItemsSource="{Binding Filters}">
+		<ListBox.DataTemplates>
+			<DataTemplate>
+				<DataTemplate.DataType>
+					<x:Type TypeName="models:Filter" x:TypeArguments="sys:String"/>
+				</DataTemplate.DataType>
+				<TextBox Text="{Binding Value}"></TextBox>
+			</DataTemplate>
+			<DataTemplate>
+				<DataTemplate.DataType>
+					<x:Type TypeName="models:Filter" x:TypeArguments="sys:Boolean"/>
+				</DataTemplate.DataType>
+				<CheckBox IsChecked="{Binding Value}"></CheckBox>
+			</DataTemplate>
+			<DataTemplate>
+				<DataTemplate.DataType>
+					<x:Type TypeName="models:Filter" x:TypeArguments="sys:Int32"/>
+				</DataTemplate.DataType>
+				<NumericUpDown Value="{Binding Value}"></NumericUpDown>
+			</DataTemplate>
+			<DataTemplate>
+				<DataTemplate.DataType>
+					<x:Type TypeName="models:Filter" x:TypeArguments="sys:DateTimeOffset"/>
+				</DataTemplate.DataType>
+				<DatePicker SelectedDate="{Binding Value}"></DatePicker>
+			</DataTemplate>
+		</ListBox.DataTemplates>
+	</ListBox>
+</Window>
