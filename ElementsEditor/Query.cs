@@ -11,11 +11,11 @@ namespace ElementsEditor
         public int? Offset { get; }
         public int? Count { get; }
         public IReadOnlyList<string>? ExcludedIds { get; }
-        public IReadOnlyList<IFilter>? Filters { get; }
+        public IReadOnlyList<IPropertyFilter>? Filters { get; }
 
         public Query(int? offset = null, int? count = null,
             IReadOnlyList<string>? excludedIds = null,
-            IReadOnlyList<IFilter>? filters = null)
+            IReadOnlyList<IPropertyFilter>? filters = null)
         {
             Offset = offset;
             Count = count;

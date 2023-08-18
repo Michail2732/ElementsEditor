@@ -4,24 +4,23 @@ using System.Text;
 
 namespace ElementsEditor
 {
-    internal class FuncFilterExecutor<TElement>
-        where TElement: Element
+    internal class FuncFilterExecutor: IPropertyFilterExecutor<bool>        
     {
-        private readonly IReadOnlyList<IFilter> _filters;
+        private readonly IReadOnlyList<IPropertyFilter> _filters;
 
-        public FuncFilterExecutor(IReadOnlyList<IFilter> filters)
+        public FuncFilterExecutor(IReadOnlyList<IPropertyFilter> filters)
         {
             _filters = filters ?? throw new ArgumentNullException(nameof(filters));
         }
 
-        public bool Execute(TElement element)
+        public bool Execute(Element element)
         {
             if (_filters.Count == 0)
                 return true;
-            bool isSuccess = ExecutePrivate(element, _filters[0]);
+            bool isSuccess = _filters[0].Execute(element, this);
             for (int i = 1; i < _filters.Count; i++)
             {
-                bool localRes = ExecutePrivate(element, _filters[i]);
+                bool localRes = _filters[i].Execute(element, this);
                 if (_filters[i].Logic == Logic.Or && isSuccess)
                     return true;
                 else if (_filters[i].Logic == Logic.Or)
@@ -32,63 +31,54 @@ namespace ElementsEditor
             return isSuccess;
         }
 
-        private bool ExecutePrivate(TElement element, IFilter filter)
+        public bool Execute(Element element, StringPropertyFilter filter)
         {
-            switch (filter.ValueType)
-            {
-                case ValueType.String:
-                    if (ElementPropertySolver<TElement, string>.TrySolveProperty(element, filter.PropertyName, out var strPropertyValue))
-                    {
-                        var filterValue = (string?)filter.Value;
-                        if (filterValue != null)
-                            return OperationExecute(strPropertyValue, filterValue, filter.Operation);
-                    }                        
-                    break;
-                case ValueType.Integer:
-                    if (ElementPropertySolver<TElement, int>.TrySolveProperty(element, filter.PropertyName, out var intPropertyValue))
-                    {
-                        var filterValue = (int?)filter.Value;
-                        if (filterValue != null)
-                            return OperationExecute(intPropertyValue, filterValue.Value, filter.Operation);
-                    }                        
-                    break;
-                case ValueType.Double:
-                    if (ElementPropertySolver<TElement, double>.TrySolveProperty(element, filter.PropertyName, out var dblPropertyValue))
-                    {
-                        var filterValue = (double?)filter.Value;
-                        if (filterValue != null)
-                            return OperationExecute(dblPropertyValue, filterValue.Value, filter.Operation);
-                    }                        
-                    break;
-                case ValueType.Decimal:
-                    if (ElementPropertySolver<TElement, decimal>.TrySolveProperty(element, filter.PropertyName, out var dcmlPropertyValue))
-                    {
-                        var filterValue = (decimal?)filter.Value;
-                        if (filterValue != null)
-                            return OperationExecute(dcmlPropertyValue, filterValue.Value, filter.Operation);
-                    }                        
-                    break;
-                case ValueType.Boolean:
-                    if (ElementPropertySolver<TElement, bool>.TrySolveProperty(element, filter.PropertyName, out var boolPropertyValue))
-                    {
-                        var filterValue = (bool?)filter.Value;
-                        if (filterValue != null)
-                            return OperationExecute(boolPropertyValue, filterValue.Value, filter.Operation);
-                    }                    
-                    break;
-                case ValueType.DateTime:
-                    if (ElementPropertySolver<TElement, DateTime>.TrySolveProperty(element, filter.PropertyName, out var dtPropertyValue))
-                    {
-                        var filterValue = (DateTime?)filter.Value;
-                        if (filterValue != null)
-                            return OperationExecute(dtPropertyValue, filterValue.Value, filter.Operation);
-                    }                        
-                    break;
-                default:
-                    break;
-            }
+            if (filter.TryGetPropertyValue(element, out var propertValue))
+                return OperationExecute(propertValue, filter.Value, filter.Operation);
             return false;
         }
+
+        public bool Execute(Element element, IntPropertyFilter filter)
+        {
+            if (filter.TryGetPropertyValue(element, out var propertValue))
+                return OperationExecute(propertValue, filter.Value, filter.Operation);
+            return false;
+        }
+
+        public bool Execute(Element element, DoublePropertyFilter filter)
+        {
+            if (filter.TryGetPropertyValue(element, out var propertValue))
+                return OperationExecute(propertValue, filter.Value, filter.Operation);
+            return false;
+        }
+
+        public bool Execute(Element element, DecimalPropertyFilter filter)
+        {
+            if (filter.TryGetPropertyValue(element, out var propertValue))
+                return OperationExecute(propertValue, filter.Value, filter.Operation);
+            return false;
+        }
+
+        public bool Execute(Element element, DateTimePropertyFilter filter)
+        {
+            if (filter.TryGetPropertyValue(element, out var propertValue))
+                return OperationExecute(propertValue, filter.Value, filter.Operation);
+            return false;
+        }
+
+        public bool Execute(Element element, BoolPropertyFilter filter)
+        {
+            if (filter.TryGetPropertyValue(element, out var propertValue))
+                return OperationExecute(propertValue, filter.Value, filter.Operation);
+            return false;
+        }
+
+        public bool Execute(Element element, CustomPropertyFilter filter)
+        {
+            if (filter.TryGetPropertyValue(element, out var propertValue))
+                return OperationExecute(propertValue, filter.Value, filter.Operation);
+            return false;
+        }      
 
         private bool OperationExecute(string? propertyValue1, string? propertyValue2, ConditionOperatioin operation)
         {
@@ -226,6 +216,26 @@ namespace ElementsEditor
                 case ConditionOperatioin.EndWith:
                 default:
                     throw new ArgumentException($"Invalidate ConditionOperation - '{operation}', for bool type");
+            }
+        }
+
+        private bool OperationExecute(object? propertyValue1, object? propertyValue2, ConditionOperatioin operation)
+        {
+            switch (operation)
+            {
+                case ConditionOperatioin.Equals:
+                    return propertyValue1 == propertyValue2;
+                case ConditionOperatioin.NotEquals:
+                    return propertyValue1 != propertyValue2;
+                case ConditionOperatioin.Large:
+                case ConditionOperatioin.LargeOrEquals:
+                case ConditionOperatioin.Less:
+                case ConditionOperatioin.LessOrEquals:
+                case ConditionOperatioin.Contains:
+                case ConditionOperatioin.StartWith:
+                case ConditionOperatioin.EndWith:
+                default:
+                    throw new ArgumentException($"Invalidate ConditionOperation - '{operation}', for custom type");
             }
         }
 

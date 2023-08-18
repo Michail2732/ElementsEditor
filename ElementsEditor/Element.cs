@@ -12,7 +12,8 @@ namespace ElementsEditor
 
     public abstract class Element: INotifyPropertyChanged, IEquatable<Element?>
     {           
-        private AccessRights _accessRights;                
+        private AccessRights _accessRights;
+        private ElementState _previousState;
 
         public Element(string id, AccessRights accessRights)
         {
@@ -35,11 +36,18 @@ namespace ElementsEditor
             {
                 if (value >= _state)
                 {
+                    _previousState = _state;
                     _state = value;
                     _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(State)));
                 }                    
             } 
-        }        
+        }
+
+        public void ResetState()
+        {
+            State = _previousState;
+            _previousState = ElementState.None;
+        }
 
         #region INotifyPropertyChanged impl
         private event PropertyChangedEventHandler? _propertyChanged;        
@@ -78,5 +86,5 @@ namespace ElementsEditor
             return 2108858624 + EqualityComparer<string>.Default.GetHashCode(Id);
         }        
         #endregion
-    }
+    }    
 }

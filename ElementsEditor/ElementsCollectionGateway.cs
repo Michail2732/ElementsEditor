@@ -7,21 +7,22 @@ using System.Threading.Tasks;
 
 namespace ElementsEditor
 {
-    public class ElementsCollectionGateway<TElement> : IElementsGateway
-        where TElement: Element
+    public class ElementsCollectionGateway : IElementsGateway        
     {
-        private readonly IList<TElement> _elements;
-        private int DebugDelay { get; set; }
+        private readonly List<Element> _elements;
+        internal List<Element> Elements => _elements;
 
-        public ElementsCollectionGateway(IEnumerable<TElement> elements)
+        public int DebugDelay { get; set; }
+
+        public ElementsCollectionGateway(IEnumerable<Element> elements)
         {
-            _elements = new List<TElement>(elements);
+            _elements = new List<Element>(elements);
         }
 
         public long GetCount(Query query)
         {
-            Func<TElement, bool>? filter1 = null;
-            Func<TElement, bool>? filter2 = null;
+            Func<Element, bool>? filter1 = null;
+            Func<Element, bool>? filter2 = null;
             if (query.Filters != null)
                 filter1 = BuildFuncFilter(query.Filters);
             if (query.ExcludedIds != null)
@@ -37,7 +38,7 @@ namespace ElementsEditor
 
         public Element[] GetElements(Query query)
         {
-            IEnumerable<TElement> elements = _elements;
+            IEnumerable<Element> elements = _elements;
             
             if (query.Filters != null)
             {
@@ -62,7 +63,7 @@ namespace ElementsEditor
 
         public void SaveChanges(IReadOnlyList<Element> changesElements)
         {
-            foreach (TElement element in changesElements)
+            foreach (Element element in changesElements)
             {               
                 if (element.State == ElementState.Removed)
                     _elements.Remove(element);
@@ -77,9 +78,9 @@ namespace ElementsEditor
             SaveChanges(changesElements);
         }
 
-        private Func<TElement, bool> BuildFuncFilter(IReadOnlyList<IFilter> filters)
+        private Func<Element, bool> BuildFuncFilter(IReadOnlyList<IPropertyFilter> filters)
         {
-            return new FuncFilterExecutor<TElement>(filters).Execute;
+            return new FuncFilterExecutor(filters).Execute;
         }
     }
 }
