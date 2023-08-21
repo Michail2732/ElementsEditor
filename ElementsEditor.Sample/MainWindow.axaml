@@ -11,19 +11,53 @@
 		x:DataType="viewModels:MainWindowViewModel"
         Title="ElementsEditor.Sample">
 	<Grid RowDefinitions="* auto">
-		<editor:ElementsEditorView
-		AllowAddingSettings="True"
+		<editor:ElementsEditorView		
 		AllowAsyncSettings="True"
-		AllowPagginationSettings="True"
-		AllowRemoveSettings="True"
+		AllowPagginationSettings="True"		
 		EnablePaggination="True"
+		EnableAdding="True"
+		EnableRemoving="True"
+		ElementsBuilder="{Binding ProductBuilders}"
 		PageSize="40"
 		ItemsGateway="{Binding ProductGateway}"
 		FiltersSource="{Binding FiltersInfo}">
 			<editor:ElementsEditorView.DataTemplates>
-				<DataTemplate DataType="{x:Type models:Fridge}">
-					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="Холодильник"/>
+				<DataTemplate DataType="models:FridgeBuilder">
+					<StackPanel Orientation="Vertical">
+						<TextBox Text="{Binding ProductName}"
+								 Watermark="Input product name"/>
+						<NumericUpDown Value="{Binding Cost}"
+									   Watermark="Input cost"/>
+						<NumericUpDown Value="{Binding Temperature}"
+									   Watermark="Input temperature"/>						
+					</StackPanel>
+				</DataTemplate>
+				<DataTemplate DataType="models:DeskLampBuilder">
+					<StackPanel Orientation="Vertical">
+						<TextBox Text="{Binding ProductName}"
+								 Watermark="Input product name"/>
+						<NumericUpDown Value="{Binding Cost}"
+									   Watermark="Input cost"/>
+						<NumericUpDown Value="{Binding Lumen}"
+									   Watermark="Input lumen"/>
+					</StackPanel>
+				</DataTemplate>
+				<DataTemplate DataType="models:RebarBuilder">
+					<StackPanel Orientation="Vertical">
+						<TextBox Text="{Binding ProductName}"
+								 Watermark="Input rebar name"/>
+						<NumericUpDown Value="{Binding Cost}"
+									   Watermark="Input cost"/>
+						<TextBox Text="{Binding Type}"
+								 Watermark="Input type"/>
+					</StackPanel>
+				</DataTemplate>
+				<DataTemplate DataType="{x:Type models:Fridge}">					
+					<StackPanel Orientation="Horizontal">						
+						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
+								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
+								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"></PathIcon>
+						<TextBlock Text="Холодильник "/>
 						<TextBlock Text="{Binding Name}"/>
 						<HeaderedContentControl Header="Цена">
 							<NumericUpDown Value="{Binding Cost}"></NumericUpDown>
@@ -35,7 +69,10 @@
 				</DataTemplate>
 				<DataTemplate DataType="{x:Type models:DeskLamp}">
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="Настольная лампа"/>
+						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
+								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
+								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"></PathIcon>
+						<TextBlock Text="Настольная лампа "/>
 						<TextBlock Text="{Binding Name}"/>
 						<HeaderedContentControl Header="Цена">
 							<NumericUpDown Value="{Binding Cost}"></NumericUpDown>
@@ -47,7 +84,10 @@
 				</DataTemplate>
 				<DataTemplate DataType="{x:Type models:Rebar}">
 					<StackPanel Orientation="Horizontal">
-						<TextBlock Text="Арматура"/>
+						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
+								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
+								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"></PathIcon>
+						<TextBlock Text="Арматура "/>
 						<TextBlock Text="{Binding Name}"/>
 						<HeaderedContentControl Header="Цена">
 							<NumericUpDown Value="{Binding Cost}"></NumericUpDown>

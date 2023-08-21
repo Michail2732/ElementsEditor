@@ -11,7 +11,7 @@ namespace ElementsEditor
 {
 
     public abstract class Element: INotifyPropertyChanged, IEquatable<Element?>
-    {           
+    {        
         private AccessRights _accessRights;
         private ElementState _previousState;
 
@@ -32,7 +32,7 @@ namespace ElementsEditor
         public ElementState State
         {
             get => _state;
-            set
+            internal set
             {
                 if (value >= _state)
                 {
@@ -43,11 +43,11 @@ namespace ElementsEditor
             } 
         }
 
-        public void ResetState()
+        internal void ResetState()
         {
             State = _previousState;
             _previousState = ElementState.None;
-        }
+        }        
 
         #region INotifyPropertyChanged impl
         private event PropertyChangedEventHandler? _propertyChanged;        

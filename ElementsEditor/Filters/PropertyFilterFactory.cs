@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ElementsEditor
 {    
-    public sealed class PropertyFilterCreator
+    public sealed class PropertyFilterFactory
     {
         public readonly string PropertyName;
         public readonly ValueType ValueType;
@@ -13,7 +13,7 @@ namespace ElementsEditor
         public readonly Delegate? ValueValidator;
         public readonly IEnumerable? AwailableValues;
 
-        public PropertyFilterCreator(string propertyName, 
+        public PropertyFilterFactory(string propertyName, 
             TryGetPropertyValueDelegate<string> stringValueExtracter, 
             ValueValidate<string>? valueValidator = null,
             IEnumerable<string>? awailableValues = null)
@@ -24,7 +24,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterCreator(string propertyName,
+        public PropertyFilterFactory(string propertyName,
             TryGetPropertyValueDelegate<int> stringValueExtracter, 
             ValueValidate<int>? valueValidator = null,
             IEnumerable<int>? awailableValues = null)
@@ -36,7 +36,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterCreator(string propertyName,
+        public PropertyFilterFactory(string propertyName,
             TryGetPropertyValueDelegate<double> stringValueExtracter, 
             ValueValidate<double>? valueValidator = null,
             IEnumerable<double>? awailableValues = null)
@@ -48,7 +48,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterCreator(string propertyName,
+        public PropertyFilterFactory(string propertyName,
             TryGetPropertyValueDelegate<decimal> stringValueExtracter,
             ValueValidate<decimal>? valueValidator = null,
             IEnumerable<decimal>? awailableValues = null)
@@ -60,7 +60,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterCreator(string propertyName,
+        public PropertyFilterFactory(string propertyName,
             TryGetPropertyValueDelegate<bool> stringValueExtracter, 
             ValueValidate<bool>? valueValidator = null)
         {
@@ -70,7 +70,7 @@ namespace ElementsEditor
             ValueValidator = valueValidator;
         }
 
-        public PropertyFilterCreator(string propertyName,
+        public PropertyFilterFactory(string propertyName,
             TryGetPropertyValueDelegate<DateTime> stringValueExtracter,
             ValueValidate<DateTime>? valueValidator = null,
             IEnumerable<DateTime>? awailableValues = null)
@@ -82,7 +82,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterCreator(string propertyName,
+        public PropertyFilterFactory(string propertyName,
             TryGetPropertyValueDelegate<object> stringValueExtracter, 
             ValueValidate<object>? valueValidator = null,
             IEnumerable<object>? awailableValues = null)

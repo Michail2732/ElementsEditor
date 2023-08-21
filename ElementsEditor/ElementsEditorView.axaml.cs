@@ -10,13 +10,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace ElementsEditor
 {
 	[TemplatePart("PART_ElementsHost", typeof(SelectingItemsControl))]
-	public partial class ElementsEditorView : UserControl, IElementsStateWatcher
+    [TemplatePart("PART_CommandsPanel", typeof(Panel))]    
+    [TemplatePart("PART_PagginationPanel", typeof(Panel))]
+    [TemplatePart("PART_FiltersPanel", typeof(Panel))]    
+    public partial class ElementsEditorView : UserControl, IElementsStateWatcher
 	{
 		private IReadOnlyList<IPropertyFilter>? _applyiedFilters;
 		private SelectingItemsControl? _elementsHostControl;
@@ -111,19 +116,7 @@ namespace ElementsEditor
 		{
 			get { return _enableRemoving; }
 			set { SetAndRaise(EnableRemovingProperty, ref _enableRemoving, value); }
-		}
-
-
-		public static readonly DirectProperty<ElementsEditorView, bool> AllowRemoveSettingsProperty =
-			AvaloniaProperty.RegisterDirect<ElementsEditorView, bool>(
-				nameof(AllowRemoveSettings), getter: o => o.AllowRemoveSettings, setter: (o, v) => o.AllowRemoveSettings = v);
-		private bool _allowRemoveSettings;
-		public bool AllowRemoveSettings
-		{
-			get { return _allowRemoveSettings; }
-			set { SetAndRaise(AllowRemoveSettingsProperty, ref _allowRemoveSettings, value); }
-		}
-
+		}		
 
 		public static readonly DirectProperty<ElementsEditorView, bool> EnableAddingProperty =
 			AvaloniaProperty.RegisterDirect<ElementsEditorView, bool>(
@@ -133,19 +126,7 @@ namespace ElementsEditor
 		{
 			get { return _enableAdding; }
 			set { SetAndRaise(EnableAddingProperty, ref _enableAdding, value); }
-		}
-
-
-		public static readonly DirectProperty<ElementsEditorView, bool> AllowAddingSettingsProperty =
-			AvaloniaProperty.RegisterDirect<ElementsEditorView, bool>(
-				nameof(AllowAddingSettings), getter: o => o.AllowAddingSettings, setter: (o, v) => o.AllowAddingSettings = v);
-		private bool _allowAddingSettings;
-		public bool AllowAddingSettings
-		{
-			get { return _allowAddingSettings; }
-			set { SetAndRaise(AllowAddingSettingsProperty, ref _allowAddingSettings, value); }
-		}
-
+		}		
 
 		public static readonly DirectProperty<ElementsEditorView, bool> EnableFiltersProperty =
 			AvaloniaProperty.RegisterDirect<ElementsEditorView, bool>(
@@ -157,7 +138,7 @@ namespace ElementsEditor
 		public bool EnableFilters
 		{
 			get { return _enableFilters; }
-			set { SetAndRaise(EnableFiltersProperty, ref _enableFilters, value); }
+			private set { SetAndRaise(EnableFiltersProperty, ref _enableFilters, value); }
 		}
 
 
@@ -254,11 +235,11 @@ namespace ElementsEditor
 		}
 
 
-		public static readonly DirectProperty<ElementsEditorView, IEnumerable<PropertyFilterCreator>> FiltersSourceProperty =
-			AvaloniaProperty.RegisterDirect<ElementsEditorView, IEnumerable<PropertyFilterCreator>>(
+		public static readonly DirectProperty<ElementsEditorView, IEnumerable<PropertyFilterFactory>> FiltersSourceProperty =
+			AvaloniaProperty.RegisterDirect<ElementsEditorView, IEnumerable<PropertyFilterFactory>>(
 				nameof(FiltersSource), getter: o => o.FiltersSource, setter: (o, v) => o.FiltersSource = v);
-		private IEnumerable<PropertyFilterCreator> _filtersSource;
-		public IEnumerable<PropertyFilterCreator> FiltersSource
+		private IEnumerable<PropertyFilterFactory> _filtersSource;
+		public IEnumerable<PropertyFilterFactory> FiltersSource
 		{
 			get { return _filtersSource; }
 			set { SetAndRaise(FiltersSourceProperty, ref _filtersSource, value); }
@@ -320,6 +301,19 @@ namespace ElementsEditor
 		}
 
 
+		public static readonly DirectProperty<ElementsEditorView, IEnumerable<ElementBuilder>> ElementsBuilderProperty =
+			AvaloniaProperty.RegisterDirect<ElementsEditorView, IEnumerable<ElementBuilder>>(
+				nameof(ElementsBuilder),
+				getter: o => o.ElementsBuilder,
+				setter: (o, v) => o.ElementsBuilder = v);
+		private IEnumerable<ElementBuilder> _elementsBuilder;
+		public IEnumerable<ElementBuilder> ElementsBuilder
+		{
+			get { return _elementsBuilder; }
+			set { SetAndRaise(ElementsBuilderProperty, ref _elementsBuilder, value); }
+		}
+
+
 		public static readonly DirectProperty<ElementsEditorView, Command> SaveChangesCommandProperty =
 			AvaloniaProperty.RegisterDirect<ElementsEditorView, Command>(
 				nameof(SaveChangesCommand), getter: o => o.SaveChangesCommand);
@@ -330,6 +324,18 @@ namespace ElementsEditor
 			private set { SetAndRaise(SaveChangesCommandProperty, ref _saveChangesCommand, value); }
 		}
 
+		public static readonly DirectProperty<ElementsEditorView, Command> AddElementCommandProperty =
+			AvaloniaProperty.RegisterDirect<ElementsEditorView, Command>(
+				nameof(AddElementCommand),
+				getter: o => o.AddElementCommand,
+				setter: (o, v) => o.AddElementCommand = v);
+
+		private Command _addElementCommand;
+		public Command AddElementCommand
+		{
+			get { return _addElementCommand; }
+			set { SetAndRaise(AddElementCommandProperty, ref _addElementCommand, value); }
+		}
 
 		public static readonly DirectProperty<ElementsEditorView, Command> ApplyFiltersCommandProperty =
 			AvaloniaProperty.RegisterDirect<ElementsEditorView, Command>(
@@ -339,11 +345,10 @@ namespace ElementsEditor
 		{
 			get { return _applyFiltersCommand; }
 			private set { SetAndRaise(ApplyFiltersCommandProperty, ref _applyFiltersCommand, value); }
-		}
-
+		}			
 
 		public ElementsEditorView()
-		{
+		{			
 			_items = new ObservableCollection<Element>();			
             _filters = new ObservableCollection<IPropertyFilter>
             {
@@ -367,18 +372,16 @@ namespace ElementsEditor
 			RefreshItemsCommand = new Command(
 				param => InvalidateItems(),
 				param => !IsBusy);
-			RemoveSelectedItemsCommand = new Command(
-				param => RemoveSelectedItems(),
+			RemoveSelectedItemsCommand = new Command( RemoveCommandHandler,
 				param => !IsBusy && !ShowChanges && SelectedElements?.Count > 0);
-			RestoreSelectedItemsCommand = new Command(
-				param => RestoreSelectedItems(),
+			RestoreSelectedItemsCommand = new Command( RestoreCommandHandler,
 				param => !IsBusy && ShowChanges && SelectedElements?.Count > 0);
-			SaveChangesCommand = new Command(
-				param => SaveChanges(),
+			SaveChangesCommand = new Command( SaveCommandHandler,
 				param => !IsBusy && ShowChanges && _changedItemsGateway.Elements.Count > 0);
-			ApplyFiltersCommand = new Command(
-				param => ApplyFilters(),
+			ApplyFiltersCommand = new Command( ApplyFiltersCommandHandler,
 				param => !IsBusy && Filters.Count > 0);
+			AddElementCommand = new Command( AddElementCommandHandler,
+                param => !IsBusy && EnableAdding);
 			InitializeComponent();
 		}
 
@@ -390,7 +393,10 @@ namespace ElementsEditor
 				_elementsHostControl.SelectionChanged -= OnSelectedItemsChanged;
 
             _elementsHostControl = e.NameScope.Get<SelectingItemsControl>("PART_ElementsHost");
-			if (_elementsHostControl != null)
+			e.NameScope.Get<Panel>("PART_CommandsPanel");
+            e.NameScope.Get<Panel>("PART_PagginationPanel");
+            e.NameScope.Get<Panel>("PART_FiltersPanel");
+            if (_elementsHostControl != null)
                 _elementsHostControl.SelectionChanged += OnSelectedItemsChanged;
         }
 
@@ -445,6 +451,7 @@ namespace ElementsEditor
 			RestoreSelectedItemsCommand.OnCanExecuteChanged();
 			SaveChangesCommand.OnCanExecuteChanged();
 			ApplyFiltersCommand.OnCanExecuteChanged();
+			AddElementCommand.OnCanExecuteChanged();
 		}
 
 
@@ -453,66 +460,82 @@ namespace ElementsEditor
 			UpdateCommandsCanExecute();				
 		}
 
-
-		private void ApplyFilters()
-		{
-			_applyiedFilters = new List<IPropertyFilter>(_filters);
+        #region Command Handlers
+        private void ApplyFiltersCommandHandler(object? param)
+        {
+            _applyiedFilters = new List<IPropertyFilter>(_filters);
             _isBusy = true;
-			CurrentPage = _defaultCurrentPage;
-			_isBusy = false;
-			InvalidateItems();
-		}
-
-		private void RestoreSelectedItems()
-		{
-			foreach (Element selectedItem in SelectedElements!)
-			{
-                selectedItem.ResetState();
-                _changedItemsGateway.Elements.Remove(selectedItem);
-            }
-			InvalidateItems();
-		}
-
-		private void RemoveSelectedItems()
-		{
-			foreach (Element selectedItem in SelectedElements!)
-			{
-                selectedItem.State = ElementState.Removed;
-				if (!_changedItemsGateway.Elements.Contains(selectedItem))
-					_changedItemsGateway.Elements.Add(selectedItem);
-            }				
-			InvalidateItems();
-		}
-
-		private async void SaveChanges()
-		{
-			try
-			{
-				_extractCts = new CancellationTokenSource();
-				IsBusy = true;				
-				if (EnableAsync)
-					await _itemsGateway.SaveChangesAsync(
-                        _changedItemsGateway.Elements,
-						_extractCts.Token);
-				else
-					_itemsGateway.SaveChanges(
-                        _changedItemsGateway.Elements);
-                _changedItemsGateway.Elements.Clear();            
-            }
-			catch (Exception e) 
-			{ 
-				DataValidationErrors.SetErrors(this, new[] { e.ToString() });
-				return;
-			}
-			finally 
-			{
-				IsBusy = false;
-				UpdateCommandsCanExecute();
-			}
+            CurrentPage = _defaultCurrentPage;
+            _isBusy = false;
             InvalidateItems();
         }
 
-		private async void InvalidateItems()
+        private void RestoreCommandHandler(object? param)
+        {
+            foreach (Element selectedItem in SelectedElements!)
+            {
+                selectedItem.ResetState();
+                _changedItemsGateway.Elements.Remove(selectedItem);
+            }
+            InvalidateItems();
+        }
+
+        private void RemoveCommandHandler(object? param)
+        {
+            foreach (Element selectedItem in SelectedElements!)
+            {
+                selectedItem.State = ElementState.Removed;
+                if (!_changedItemsGateway.Elements.Contains(selectedItem))
+                    _changedItemsGateway.Elements.Add(selectedItem);
+            }
+            InvalidateItems();
+        }
+
+        private async  void AddElementCommandHandler(object? param)
+        {
+			AddElementViewModel vm = new AddElementViewModel(_elementsBuilder);
+			var dialog = new AddElementWindow(vm, this.DataTemplates);
+			var parentWindow = TopLevel.GetTopLevel(this) as Window;
+			if (parentWindow is null)
+				throw new Exception("Coul not find parent window");
+            var result = await dialog.ShowDialog<Element>(parentWindow);
+			if (result != null)
+			{
+				result.State = ElementState.New;
+				_changedItemsGateway.Elements.Add(result);
+			}
+        }
+
+        private async void SaveCommandHandler(object? param)
+        {
+            try
+            {
+                _extractCts = new CancellationTokenSource();
+                IsBusy = true;
+                if (EnableAsync)
+                    await _itemsGateway.SaveChangesAsync(
+                        _changedItemsGateway.Elements,
+                        _extractCts.Token);
+                else
+                    _itemsGateway.SaveChanges(
+                        _changedItemsGateway.Elements);
+                _changedItemsGateway.Elements.Clear();
+            }
+            catch (Exception e)
+            {
+                DataValidationErrors.SetErrors(this, new[] { e.ToString() });
+                return;
+            }
+            finally
+            {
+                IsBusy = false;
+                UpdateCommandsCanExecute();
+            }
+            InvalidateItems();
+        }
+        #endregion
+
+        private async void InvalidateItems()
 		{
             if (IsBusy || _itemsGateway is null)
                 return;			

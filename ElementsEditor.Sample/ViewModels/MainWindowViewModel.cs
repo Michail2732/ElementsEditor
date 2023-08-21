@@ -1,5 +1,6 @@
 ﻿using ElementsEditor.Sample.Models;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,16 +16,22 @@ namespace ElementsEditor.Sample.ViewModels
 { 
 	public class MainWindowViewModel : INotifyPropertyChanged
 	{
+		public IEnumerable Products { get; }
 		public IElementsGateway ProductGateway { get; }
-		public IEnumerable<PropertyFilterCreator> FiltersInfo { get; }
+		public IEnumerable<PropertyFilterFactory> FiltersInfo { get; }
+		public IEnumerable<ElementBuilder> ProductBuilders { get; }
 
 		public MainWindowViewModel()
 		{
-			ProductGateway = new ElementsCollectionGateway(GenerateProducts())
+			var products = GenerateProducts();
+			Products = products;
+            ProductGateway = new ElementsCollectionGateway(products)
 			{
 				DebugDelay = 700
 			};
 			FiltersInfo = GenerateProductFilters();
+			ProductBuilders = GeneratProductBuilders();
+
         }		
 
 
@@ -34,24 +41,38 @@ namespace ElementsEditor.Sample.ViewModels
 			var products = new List<Product>(count);
 			for (int i = 0; i < count; i++)
 			{
-				if (count % 5 == 0)
+				if (i % 5 == 0)
 					products.Add(new DeskLamp(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Electros sa{i}", i + 259 / 2));
-				else if (count % 3 == 0)
-					products.Add(new Rebar(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Armatura {i}", $"PT1{i%2}-NZ{i}"));
-				else if (count % 2 == 0)
-					products.Add(new Fridge(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Indesit LX{i}", -(i % 100 + 13)));				
-			}
+				else if (i % 3 == 0)
+					products.Add(new Rebar(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Armatura {i}", $"PT1{i % 2}-NZ{i}"));
+				else if (i % 2 == 0)
+					products.Add(new Fridge(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Indesit LX{i}", -(i % 100 + 13)));
+				else
+					products.Add(new Rebar(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Indesit LX{i}", $"HT1{i % 2}-PR{i}"));
+            }
 			return products;
 		}
 
-		private IEnumerable<PropertyFilterCreator> GenerateProductFilters()
+		private IEnumerable<PropertyFilterFactory> GenerateProductFilters()
 		{
-			List<PropertyFilterCreator> filters = new List<PropertyFilterCreator>();
-			filters.Add(new PropertyFilterCreator(nameof(Product.Cost), GetCostProperty));
-            filters.Add(new PropertyFilterCreator(nameof(Product.Name), GetNameProperty));
-            filters.Add(new PropertyFilterCreator(nameof(Fridge.Temperature), GetTemperatureProperty));
+			List<PropertyFilterFactory> filters = new List<PropertyFilterFactory>();
+			filters.Add(new PropertyFilterFactory(nameof(Product.Cost), GetCostProperty));
+            filters.Add(new PropertyFilterFactory(nameof(Product.Name), GetNameProperty));
+            filters.Add(new PropertyFilterFactory(nameof(Fridge.Temperature), GetTemperatureProperty));
 			return filters;
         }
+
+
+		public IEnumerable<ElementBuilder> GeneratProductBuilders()
+		{
+			return new List<ElementBuilder>()
+			{
+				new FridgeBuilder("Создать холодильник"),
+				new RebarBuilder("Создать арматуру"),
+				new DeskLampBuilder("Создать настольную лампу")
+			};
+		}
+
 
 
 		private bool GetNameProperty(Element element, out string result)

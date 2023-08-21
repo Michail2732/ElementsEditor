@@ -10,15 +10,25 @@
 		<StreamGeometry x:Key="editor_chevron_left">M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z</StreamGeometry>
 		<StreamGeometry x:Key="editor_seetings">M3,6H21V8H3V6M3,11H21V13H3V11M3,16H21V18H3V16Z</StreamGeometry>
 		<StreamGeometry x:Key="editor_save_changes">M4 19H10V21H4C2.89 21 2 20.1 2 19V5C2 3.9 2.89 3 4 3H16L20 7V9.12L18 11.12V7.83L15.17 5H4V19M14 10V6H5V10H14M20.42 12.3C20.31 12.19 20.18 12.13 20.04 12.13C19.9 12.13 19.76 12.19 19.65 12.3L18.65 13.3L20.7 15.35L21.7 14.35C21.92 14.14 21.92 13.79 21.7 13.58L20.42 12.3M12 19.94V22H14.06L20.12 15.93L18.07 13.88L12 19.94M14 15C14 13.34 12.66 12 11 12S8 13.34 8 15 9.34 18 11 18C11.04 18 11.08 18 11.13 18L14 15.13C14 15.09 14 15.05 14 15</StreamGeometry>
-		<StreamGeometry x:Key="editor_filters">M14,12V19.88C14.04,20.18 13.94,20.5 13.71,20.71C13.32,21.1 12.69,21.1 12.3,20.71L10.29,18.7C10.06,18.47 9.96,18.16 10,17.87V12H9.97L4.21,4.62C3.87,4.19 3.95,3.56 4.38,3.22C4.57,3.08 4.78,3 5,3V3H19V3C19.22,3 19.43,3.08 19.62,3.22C20.05,3.56 20.13,4.19 19.79,4.62L14.03,12H14Z</StreamGeometry>
+		<StreamGeometry x:Key="editor_filters">M15,19.88C15.04,20.18 14.94,20.5 14.71,20.71C14.32,21.1 13.69,21.1 13.3,20.71L9.29,16.7C9.06,16.47 8.96,16.16 9,15.87V10.75L4.21,4.62C3.87,4.19 3.95,3.56 4.38,3.22C4.57,3.08 4.78,3 5,3V3H19V3C19.22,3 19.43,3.08 19.62,3.22C20.05,3.56 20.13,4.19 19.79,4.62L15,10.75V19.88M7.04,5L11,10.06V15.58L13,17.58V10.05L16.96,5H7.04Z</StreamGeometry>
 		<StreamGeometry x:Key="editor_refresh">M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z</StreamGeometry>
 		<StreamGeometry x:Key="editor_history">M13.5,8H12V13L16.28,15.54L17,14.33L13.5,12.25V8M13,3A9,9 0 0,0 4,12H1L4.96,16.03L9,12H6A7,7 0 0,1 13,5A7,7 0 0,1 20,12A7,7 0 0,1 13,19C11.07,19 9.32,18.21 8.06,16.94L6.64,18.36C8.27,20 10.5,21 13,21A9,9 0 0,0 22,12A9,9 0 0,0 13,3</StreamGeometry>
-		<StreamGeometry x:Key="editor_delete">M20.37,8.91L19.37,10.64L7.24,3.64L8.24,1.91L11.28,3.66L12.64,3.29L16.97,5.79L17.34,7.16L20.37,8.91M6,19V7H11.07L18,11V19A2,2 0 0,1 16,21H8A2,2 0 0,1 6,19Z</StreamGeometry>
+		<StreamGeometry x:Key="editor_delete">M20.37,8.91L19.37,10.64L7.24,3.64L8.24,1.91L11.28,3.66L12.64,3.29L16.97,5.79L17.34,7.16L20.37,8.91M6,19V7H11.07L18,11V19A2,2 0 0,1 16,21H8A2,2 0 0,1 6,19M8,19H16V12.2L10.46,9H8V19Z</StreamGeometry>
 		<StreamGeometry x:Key="editor_addnew">M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z</StreamGeometry>
 		<StreamGeometry x:Key="editor_restore">M21 11.11V5C21 3.9 20.11 3 19 3H14.82C14.4 1.84 13.3 1 12 1S9.6 1.84 9.18 3H5C3.9 3 3 3.9 3 5V19C3 20.11 3.9 21 5 21H11.11C12.37 22.24 14.09 23 16 23C19.87 23 23 19.87 23 16C23 14.09 22.24 12.37 21 11.11M12 3C12.55 3 13 3.45 13 4S12.55 5 12 5 11 4.55 11 4 11.45 3 12 3M5 19V5H7V7H17V5H19V9.68C18.09 9.25 17.08 9 16 9H7V11H11.1C10.5 11.57 10.04 12.25 9.68 13H7V15H9.08C9.03 15.33 9 15.66 9 16C9 17.08 9.25 18.09 9.68 19H5M16 21C13.24 21 11 18.76 11 16S13.24 11 16 11 21 13.24 21 16 18.76 21 16 21M16.5 16.25L19.36 17.94L18.61 19.16L15 17V12H16.5V16.25Z</StreamGeometry>
+		<StreamGeometry x:Key="editor_item_delete">M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.12,5.12L18.87,8.87M3,17.25V21H6.75L17.81,9.93L14.06,6.18L3,17.25Z</StreamGeometry>
+		<StreamGeometry x:Key="editor_item_new">M20.7,7C21.1,6.6 21.1,6 20.7,5.6L18.4,3.3C18,2.9 17.4,2.9 17,3.3L15.2,5.1L19,8.9M3,17.2V21H6.8L17.8,9.9L14.1,6.1L3,17.2M10,5V7H2V5H10Z</StreamGeometry>
+		<StreamGeometry x:Key="editor_item_edit">M20.7,7C21.1,6.6 21.1,6 20.7,5.6L18.4,3.3C18,2.9 17.4,2.9 17,3.3L15.2,5.1L19,8.9M3,17.2V21H6.8L17.8,9.9L14.1,6.1L3,17.2M7,2V5H10V7H7V10H5V7H2V5H5V2H7Z</StreamGeometry>
+		<StreamGeometry x:Key="editor_filter_add">M15 17H18V14H20V17H23V19H20V22H18V19H15V17M13 19.88C13.04 20.18 12.94 20.5 12.72 20.71C12.32 21.1 11.69 21.1 11.3 20.71L7.29 16.7C7.06 16.47 6.96 16.16 7 15.87V10.75L2.21 4.62C1.87 4.19 1.95 3.56 2.38 3.22C2.57 3.08 2.78 3 3 3V3H17V3C17.22 3 17.43 3.08 17.62 3.22C18.05 3.56 18.13 4.19 17.79 4.62L13 10.75V19.88M5.04 5L9 10.07V15.58L11 17.58V10.05L14.96 5H5.04Z</StreamGeometry>
 		<local:LongConverter x:Key="long_converter"></local:LongConverter>
 		<local:BoolInverseConverter x:Key="bool_inverse_converter"></local:BoolInverseConverter>
 		<local:PropertyFilterStrConverter x:Key="filter_str_converter"></local:PropertyFilterStrConverter>
+		<local:HasElementXXXStateConverter State="{x:Static local:ElementState.Modified}" 
+										   x:Key="HasElementDeleteStateConverter"></local:HasElementXXXStateConverter>
+		<local:HasElementXXXStateConverter State="{x:Static local:ElementState.New}"
+										   x:Key="HasElementModifyStateConverter"></local:HasElementXXXStateConverter>
+		<local:HasElementXXXStateConverter State="{x:Static local:ElementState.Removed}"
+										   x:Key="HasElementNewStateConverter"></local:HasElementXXXStateConverter>
 	</UserControl.Resources>
 	<UserControl.Styles>
 		<Style Selector="Control.editor_toolbar_buttons">
@@ -66,6 +76,19 @@
 				</DataTemplate>
 			</Setter>
 		</Style>
+
+		<Style Selector="PathIcon.IsElementEdited">
+			<Setter Property="Data" Value="{StaticResource editor_item_edit}"/>
+		</Style>
+		
+		<Style Selector="PathIcon.IsElementDeleted">
+			<Setter Property="Data" Value="{StaticResource editor_item_delete}"/>
+		</Style>
+		
+		<Style Selector="PathIcon.IsElementAdded">
+			<Setter Property="Data" Value="{StaticResource editor_item_new}"/>
+		</Style>
+		
 	</UserControl.Styles>
 	<UserControl.Template>
 		<ControlTemplate>			
@@ -73,37 +96,39 @@
 				<DockPanel>
 					<DockPanel DockPanel.Dock="Top"
 							   LastChildFill="False"
+							   x:Name="PART_CommandsPanel"
 							   Background="Brown">
 						<ToggleButton ToolTip.Tip="Show item change history"
 									  IsChecked="{Binding ShowChanges, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-									  Margin="10 5 0 5"
+									  Margin="10 5 0 5"									  
 									  Classes="editor_toolbar_buttons">
 							<PathIcon Data="{StaticResource editor_history}"></PathIcon>
 						</ToggleButton>
 						<Button Command="{TemplateBinding SaveChangesCommand}"
-								ToolTip.Tip="Save changes"
+								ToolTip.Tip="Save changes"								
 								Classes="editor_toolbar_buttons">
 							<PathIcon Data="{StaticResource editor_save_changes}"></PathIcon>
 						</Button>
-						<Button ToolTip.Tip="Restore selected items"
-								Classes="editor_toolbar_buttons"
+						<Button ToolTip.Tip="Restore selected elements"
+								Classes="editor_toolbar_buttons"								
 								Command="{TemplateBinding RestoreSelectedItemsCommand}">
 							<PathIcon Data="{StaticResource editor_restore}"></PathIcon>
 						</Button>
 						<Button ToolTip.Tip="Refresh items"
 								Command="{TemplateBinding RefreshItemsCommand}"
-								Margin="15 5 0 5"
+								Margin="15 5 0 5"								
 								Classes="editor_toolbar_buttons">
 							<PathIcon Data="{StaticResource editor_refresh}"></PathIcon>
 						</Button>
 						<Button ToolTip.Tip="Add new item (not realized)"
 								Classes="editor_toolbar_buttons"
+								Command="{TemplateBinding AddElementCommand}"																
 								IsVisible="{TemplateBinding EnableAdding}">
 							<PathIcon Data="{StaticResource editor_addnew}"></PathIcon>
 						</Button>
 						<Button ToolTip.Tip="Mark selected items as remove"
 								Command="{TemplateBinding RemoveSelectedItemsCommand}"
-								IsVisible="{TemplateBinding EnableRemoving}"
+								IsVisible="{TemplateBinding EnableRemoving}"																
 								Classes="editor_toolbar_buttons">
 							<PathIcon Data="{StaticResource editor_delete}"></PathIcon>
 						</Button>
@@ -126,15 +151,7 @@
 										<CheckBox IsChecked="{Binding EnableAsync, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
 												  IsVisible="{TemplateBinding AllowAsyncSettings}"
 												  Content="Enable asynchrony">											
-										</CheckBox>
-										<CheckBox IsChecked="{Binding EnableRemoving, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-												  IsVisible="{TemplateBinding AllowRemoveSettings}"
-												  Content="Enable removing">
-										</CheckBox>
-										<CheckBox IsChecked="{Binding EnableAdding, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
-												  IsVisible="{TemplateBinding AllowAddingSettings}"
-												  Content="Enable adding">
-										</CheckBox>
+										</CheckBox>										
 									</StackPanel>
 								</Flyout>
 							</Button.Flyout>
@@ -148,7 +165,8 @@
 					</DockPanel>
 					<RelativePanel DockPanel.Dock="Bottom"
 								   Background="LightGray"
-								   Height="35"								   
+								   Height="35"
+								   x:Name="PART_PagginationPanel"
 								   IsVisible="{TemplateBinding EnablePaggination}">
 						<TextBlock
 								   x:Name="tbl_page_size"
@@ -187,11 +205,15 @@
 						</StackPanel>
 					</RelativePanel>
 					<DockPanel DockPanel.Dock="Top"
+							   x:Name="PART_FiltersPanel"
 							   IsVisible="{TemplateBinding EnableFilters}">
 						<Button Content="Apply filter"
 								DockPanel.Dock="Right"
 								Command="{TemplateBinding ApplyFiltersCommand}">							
-						</Button>						
+						</Button>
+						<Button ToolTip.Tip="Add new filter">
+							<PathIcon Data="{StaticResource editor_filter_add}"></PathIcon>
+						</Button>
 						<ListBox 
 							 ItemsSource="{TemplateBinding Filters}"							 
 							 ScrollViewer.HorizontalScrollBarVisibility="Auto">
