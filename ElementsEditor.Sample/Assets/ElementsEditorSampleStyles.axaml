@@ -1,0 +1,93 @@
+﻿<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Design.PreviewWith>
+    </Design.PreviewWith>
+
+	<Style Selector=":is(Button).editor_toolbar_button">
+		<Setter Property="Background" Value="{StaticResource middle_sky_blue}"/>
+		<Setter Property="Foreground" Value="{StaticResource dark_violet}"/>
+		<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{StaticResource light_sky_blue}"/>
+		</Style>
+		<Style Selector="^:checked  /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{StaticResource light_sky_blue_2}"/>
+			<Setter Property="Foreground" Value="{StaticResource middle_violet}"/>
+		</Style>
+		<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Background" Value="{StaticResource light_sky_blue_2}"/>
+			<Setter Property="Foreground" Value="{StaticResource middle_violet}"/>
+		</Style>
+	</Style>
+
+	<Style Selector="ListBox.editor_filterring_listbox">
+		<Setter Property="Background" Value="{StaticResource gray}"/>
+	</Style>
+
+	<Style Selector="ListBox.editor_filterring_listbox > ListBoxItem">
+		<Setter Property="Margin" Value="2 1"/>
+		<Setter Property="CornerRadius" Value="12"/>
+		<Setter Property="Padding" Value="6 0"/>
+		<Setter Property="Background" Value="{StaticResource gray-orange}"/>
+	</Style>
+
+	<Style Selector="TextBlock.editor_pagination_page-size_textblock,
+						 TextBlock.editor_pagination_pages-count_textblock,
+						 TextBlock.editor_filterring_filter_propname_textblock">
+		<Setter Property="Foreground" Value="{StaticResource dark}"/>
+	</Style>
+
+	<Style Selector="TextBlock.editor_toolbar_items-count_textblock">
+		<Setter Property="Foreground" Value="{StaticResource dark_violet}"/>
+	</Style>
+
+	<Style Selector="TextBox.editor_pagination_textbox">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Foreground" Value="{StaticResource dark}"/>
+		<Setter Property="Cursor" Value="Ibeam"/>
+	</Style>
+
+	<Style Selector="Button.editor_pagination_page_button,
+						 Button.editor_filterring_listmode_button,
+						 Button.editor_filterring_apply-filter_button,
+						 Button.editor_filterring_add-filter_button,
+						 Button.editor_filterring_delete-applied-filter_button">
+		<Setter Property="Background" Value="{StaticResource middle_gray}"/>
+		<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Foreground" Value="{StaticResource dark}" />
+		</Style>
+		<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Foreground" Value="{StaticResource dark_2}" />
+			<Setter Property="Background" Value="{StaticResource middle_gray_2}"/>
+		</Style>
+		<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Foreground" Value="{StaticResource dark_2}" />
+		</Style>
+		<Style Selector="^:disabled /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Foreground" Value="{StaticResource dark_0}" />
+			<Setter Property="Background" Value="{StaticResource gray_2}"/>
+		</Style>
+	</Style>
+
+	<Style Selector=":is(TemplatedControl).editor_filterring_filter-descriptors_combobox,
+						 :is(TemplatedControl).editor_filterring_filter_logic_combobox,
+						 :is(TemplatedControl).editor_filterring_filter_operations_combobox,
+						 :is(TemplatedControl).editor_filterring_filtervalue_textbox,
+						 :is(TemplatedControl).editor_filterring_filtervalue_numeric,
+						 :is(TemplatedControl).editor_filterring_filtervalue_checkbox,
+						 :is(TemplatedControl).editor_filterring_filtervalue_datepicker">
+		<Setter Property="BorderThickness" Value="0"/>
+		<Setter Property="Foreground" Value="{StaticResource dark}" />
+	</Style>
+
+	<Style Selector=":is(Panel).editor_toolbar_panel">
+		<Setter Property="Background" Value="{StaticResource sky_blue}"/>
+	</Style>
+
+	<Style Selector=":is(Panel).editor_pagination_panel">
+		<Setter Property="Background" Value="{StaticResource gray}"/>
+	</Style>
+
+	<Style Selector=":is(Panel).editor_filterring_panel">
+		<Setter Property="Background" Value="{StaticResource gray}"/>
+	</Style>
+</Styles>

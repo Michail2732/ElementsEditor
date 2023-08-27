@@ -5,15 +5,15 @@ using System.Text;
 
 namespace ElementsEditor
 {    
-    public sealed class PropertyFilterFactory
+    public sealed class PropertyFilterDescriptor
     {
-        public readonly string PropertyName;
+        public string PropertyName { get; }
         public readonly ValueType ValueType;
         public readonly Delegate PropertyExtractor;
         public readonly Delegate? ValueValidator;
         public readonly IEnumerable? AwailableValues;
 
-        public PropertyFilterFactory(string propertyName, 
+        public PropertyFilterDescriptor(string propertyName, 
             TryGetPropertyValueDelegate<string> stringValueExtracter, 
             ValueValidate<string>? valueValidator = null,
             IEnumerable<string>? awailableValues = null)
@@ -24,7 +24,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterFactory(string propertyName,
+        public PropertyFilterDescriptor(string propertyName,
             TryGetPropertyValueDelegate<int> stringValueExtracter, 
             ValueValidate<int>? valueValidator = null,
             IEnumerable<int>? awailableValues = null)
@@ -36,7 +36,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterFactory(string propertyName,
+        public PropertyFilterDescriptor(string propertyName,
             TryGetPropertyValueDelegate<double> stringValueExtracter, 
             ValueValidate<double>? valueValidator = null,
             IEnumerable<double>? awailableValues = null)
@@ -48,7 +48,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterFactory(string propertyName,
+        public PropertyFilterDescriptor(string propertyName,
             TryGetPropertyValueDelegate<decimal> stringValueExtracter,
             ValueValidate<decimal>? valueValidator = null,
             IEnumerable<decimal>? awailableValues = null)
@@ -60,7 +60,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterFactory(string propertyName,
+        public PropertyFilterDescriptor(string propertyName,
             TryGetPropertyValueDelegate<bool> stringValueExtracter, 
             ValueValidate<bool>? valueValidator = null)
         {
@@ -70,7 +70,7 @@ namespace ElementsEditor
             ValueValidator = valueValidator;
         }
 
-        public PropertyFilterFactory(string propertyName,
+        public PropertyFilterDescriptor(string propertyName,
             TryGetPropertyValueDelegate<DateTime> stringValueExtracter,
             ValueValidate<DateTime>? valueValidator = null,
             IEnumerable<DateTime>? awailableValues = null)
@@ -82,7 +82,7 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public PropertyFilterFactory(string propertyName,
+        public PropertyFilterDescriptor(string propertyName,
             TryGetPropertyValueDelegate<object> stringValueExtracter, 
             ValueValidate<object>? valueValidator = null,
             IEnumerable<object>? awailableValues = null)
@@ -94,51 +94,57 @@ namespace ElementsEditor
             AwailableValues = awailableValues;
         }
 
-        public IPropertyFilter Create()
+        internal IPropertyFilterModel CreateFilterModel(bool isFirst)
         {
             switch (ValueType)
             {
                 case ValueType.String:
-                    return new StringPropertyFilter(
-                        (TryGetPropertyValueDelegate<string>)PropertyExtractor, 
-                        PropertyName, 
-                        valueValidator: ValueValidator as Func<string?, bool>,
-                        awailableValues: AwailableValues as IEnumerable<string>);
+                    return new StringPropertyFilterModel(
+                        PropertyName,
+                        ValueType.String,
+                        ValueValidator as ValueValidate<string>,
+                        AwailableValues as IEnumerable<string>,
+                        (TryGetPropertyValueDelegate<string>)PropertyExtractor)
+                    { IsFirst = isFirst};
                 case ValueType.Integer:
-                    return new IntPropertyFilter(
-                        (TryGetPropertyValueDelegate<int>)PropertyExtractor,
+                    return new IntPropertyFilterModel(
                         PropertyName,
-                        valueValidator: ValueValidator as Func<int, bool>,
-                        awailableValues: AwailableValues as IEnumerable<int>);
+                        ValueType.Integer,
+                        ValueValidator as ValueValidate<int>,
+                        AwailableValues as IEnumerable<int>,
+                        (TryGetPropertyValueDelegate<int>)PropertyExtractor)
+                    { IsFirst = isFirst };
                 case ValueType.Double:
-                    return new DoublePropertyFilter(
-                        (TryGetPropertyValueDelegate<double>)PropertyExtractor,
+                    return new DoublePropertyFilterModel(
                         PropertyName,
-                        valueValidator: ValueValidator as Func<double, bool>,
-                        awailableValues: AwailableValues as IEnumerable<double>);
+                        ValueType.Double,
+                        ValueValidator as ValueValidate<double>,
+                        AwailableValues as IEnumerable<double>,
+                        (TryGetPropertyValueDelegate<double>)PropertyExtractor)
+                    { IsFirst = isFirst };
                 case ValueType.Decimal:
-                    return new DecimalPropertyFilter(
-                        (TryGetPropertyValueDelegate<decimal>)PropertyExtractor,
+                    return new DecimalPropertyFilterModel(
                         PropertyName,
-                        valueValidator: ValueValidator as Func<decimal, bool>,
-                        awailableValues: AwailableValues as IEnumerable<decimal>);
+                        ValueType.Decimal,
+                        ValueValidator as ValueValidate<decimal>,
+                        AwailableValues as IEnumerable<decimal>,
+                        (TryGetPropertyValueDelegate<decimal>)PropertyExtractor)
+                    { IsFirst = isFirst };
                 case ValueType.Boolean:
-                    return new BoolPropertyFilter(
-                        (TryGetPropertyValueDelegate<bool>)PropertyExtractor,
+                    return new BooleanPropertyFilterModel(
                         PropertyName,
-                        valueValidator: ValueValidator as Func<bool, bool>);
+                        ValueType.Boolean,
+                        ValueValidator as ValueValidate<bool>,                        
+                        (TryGetPropertyValueDelegate<bool>)PropertyExtractor)
+                    { IsFirst = isFirst };
                 case ValueType.DateTime:
-                    return new DateTimePropertyFilter(
-                        (TryGetPropertyValueDelegate<DateTime>)PropertyExtractor,
+                    return new DateTimePropertyFilterModel(
                         PropertyName,
-                        valueValidator: ValueValidator as Func<DateTime, bool>,
-                        awailableValues: AwailableValues as IEnumerable<DateTime>);
-                case ValueType.Custom:
-                    return new CustomPropertyFilter(
-                        (TryGetPropertyValueDelegate<object>)PropertyExtractor,
-                        PropertyName,
-                        valueValidator: ValueValidator as Func<object?, bool>,
-                        awailableValues: AwailableValues as IEnumerable<object>);
+                        ValueType.DateTime,
+                        ValueValidator as ValueValidate<DateTime>,
+                        AwailableValues as IEnumerable<DateTime>,
+                        (TryGetPropertyValueDelegate<DateTime>)PropertyExtractor)
+                    { IsFirst = isFirst };
                 default:
                     throw new Exception("Unknown value type");
             }

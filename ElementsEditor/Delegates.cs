@@ -6,5 +6,5 @@ namespace ElementsEditor
 {
     public delegate bool TryGetPropertyValueDelegate<TResult>(Element element, out TResult result);
 
-    public delegate bool ValueValidate<in Tproperty>(Tproperty value, out string? error);
+    public delegate bool ValueValidate<in Tproperty>(Tproperty? value, out string? error);
 }

@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:local="clr-namespace:ElementsEditor;assembly=ElementsEditor"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ElementsEditor.FiltersListView">	
+	<DockPanel LastChildFill="True">
+		<DockPanel DockPanel.Dock="Top"
+				   Classes="editor_toolbar_panel">
+			<Button DockPanel.Dock="Right"
+					ToolTip.Tip="Delete selected filters"
+					Command="{Binding DeleteSelectdFilters}"
+					Classes="editor_toolbar_button position_first_right_horizontal"
+					Content="Remove">				
+			</Button>
+			<Button ToolTip.Tip="Add new filter"
+					Command="{Binding AddNewFilterCommand}"
+					DockPanel.Dock="Left"
+					Classes="editor_toolbar_button position_first_left_horizontal">
+				<PathIcon Data="{StaticResource editor_filter_add}"></PathIcon>
+			</Button>
+			<ComboBox ItemsSource="{Binding FilterDescriptors}"
+					  DockPanel.Dock="Left"
+					  Classes="editor_filterring_filter-descriptors_combobox position_middle_horizontal"
+					  SelectedItem="{Binding SelectedFilterDescriptor}">
+				<ComboBox.ItemTemplate>
+					<DataTemplate DataType="local:PropertyFilterDescriptor">
+						<TextBlock Text="{Binding PropertyName}"/>
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>			
+		</DockPanel>		
+		<ListBox
+				 Margin="0 5"
+				 ItemsSource="{Binding Filters}"	
+				 Classes="editor_filterring_listbox"
+				 SelectionMode="Multiple"
+				 SelectedItems="{Binding SelectedFilters}"
+				 x:Name="lbx_filters"
+				 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+				 ItemTemplate="{StaticResource editor_filters_template}">						
+		</ListBox>
+	</DockPanel>	
+</UserControl>

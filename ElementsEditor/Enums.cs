@@ -21,7 +21,7 @@ namespace ElementsEditor
         Removed
     }
 
-    public enum ConditionOperatioin
+    public enum ConditionOperation
     {
         Equals,
         NotEquals,
@@ -47,7 +47,6 @@ namespace ElementsEditor
         Double,
         Decimal,
         Boolean,
-        DateTime,
-        Custom
+        DateTime        
     }
 }

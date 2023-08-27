@@ -1,0 +1,20 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:local="clr-namespace:ElementsEditor;assembly=ElementsEditor"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="ElementsEditor.AddNewElementView">
+	<DockPanel Margin="10">
+		<ComboBox DockPanel.Dock="Top"
+				  ItemsSource="{Binding ElementBuilders}"
+				  SelectedItem="{Binding ElementBuilder}">
+			<ComboBox.ItemTemplate>
+				<DataTemplate DataType="local:ElementBuilder">
+					<TextBlock Text="{Binding Name}"/>
+				</DataTemplate>
+			</ComboBox.ItemTemplate>
+		</ComboBox>		
+		<ContentControl Content="{Binding ElementBuilder}"/>
+	</DockPanel>
+</UserControl>

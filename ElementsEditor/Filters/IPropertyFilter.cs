@@ -3,11 +3,8 @@
     public interface IPropertyFilter
 	{
         Logic Logic { get; }        
-        ConditionOperatioin Operation { get; }        
-        ValueType ValueType { get; }
-        string? PropertyName { get; }
-        TResult Execute<TResult>(Element element, IPropertyFilterExecutor<TResult> executor);
-        object? GetValue();
+        ConditionOperation Operation { get; }                
+        TResult Execute<TElement, TResult>(TElement element, IPropertyFilterExecutor<TElement, TResult> executor) where TElement : Element;        
     }
 
 }

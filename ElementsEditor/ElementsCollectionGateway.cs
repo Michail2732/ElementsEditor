@@ -7,22 +7,23 @@ using System.Threading.Tasks;
 
 namespace ElementsEditor
 {
-    public class ElementsCollectionGateway : IElementsGateway        
+    public class ElementsCollectionGateway<TELement> : IElementsGateway<TELement>
+        where TELement : Element
     {
-        private readonly List<Element> _elements;
-        internal List<Element> Elements => _elements;
+        private readonly List<TELement> _elements;
+        internal List<TELement> Elements => _elements;
 
         public int DebugDelay { get; set; }
 
-        public ElementsCollectionGateway(IEnumerable<Element> elements)
+        public ElementsCollectionGateway(IEnumerable<TELement> elements)
         {
-            _elements = new List<Element>(elements);
+            _elements = new List<TELement>(elements);
         }
 
         public long GetCount(Query query)
         {
-            Func<Element, bool>? filter1 = null;
-            Func<Element, bool>? filter2 = null;
+            Func<TELement, bool>? filter1 = null;
+            Func<TELement, bool>? filter2 = null;
             if (query.Filters != null)
                 filter1 = BuildFuncFilter(query.Filters);
             if (query.ExcludedIds != null)
@@ -36,9 +37,9 @@ namespace ElementsEditor
             return GetCount(query);
         }
 
-        public Element[] GetElements(Query query)
+        public TELement[] GetElements(Query query)
         {
-            IEnumerable<Element> elements = _elements;
+            IEnumerable<TELement> elements = _elements;
             
             if (query.Filters != null)
             {
@@ -55,15 +56,15 @@ namespace ElementsEditor
             return elements.ToArray();
         }
 
-        public async Task<Element[]> GetElementsAsync(Query query, CancellationToken ct)
+        public async Task<TELement[]> GetElementsAsync(Query query, CancellationToken ct)
         {
             await Task.Delay(DebugDelay);
             return GetElements(query);
         }        
 
-        public void SaveChanges(IReadOnlyList<Element> changesElements)
+        public void SaveChanges(IReadOnlyList<TELement> changesElements)
         {
-            foreach (Element element in changesElements)
+            foreach (TELement element in changesElements)
             {               
                 if (element.State == ElementState.Removed)
                     _elements.Remove(element);
@@ -72,15 +73,15 @@ namespace ElementsEditor
             }
         }
 
-        public async Task SaveChangesAsync(IReadOnlyList<Element> changesElements, CancellationToken ct)
+        public async Task SaveChangesAsync(IReadOnlyList<TELement> changesElements, CancellationToken ct)
         {
             await Task.Delay(DebugDelay);
             SaveChanges(changesElements);
         }
 
-        private Func<Element, bool> BuildFuncFilter(IReadOnlyList<IPropertyFilter> filters)
+        private Func<TELement, bool> BuildFuncFilter(IReadOnlyList<IPropertyFilter> filters)
         {
-            return new FuncFilterExecutor(filters).Execute;
+            return new FuncFilterExecutor<TELement>(filters).Execute;
         }
     }
 }

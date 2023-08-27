@@ -3,7 +3,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="ElementsEditor.AddElementWindow"
+        x:Class="ElementsEditor.ModalWIndow"
 		xmlns:local="clr-namespace:ElementsEditor;assembly=ElementsEditor"			 
 		x:DataType="local:AddElementViewModel"
 		WindowStartupLocation="CenterScreen"
@@ -13,16 +13,7 @@
         Title="AddElementWindow"
 		Height="600"
 		Width="400">
-	<DockPanel Margin="10">
-		<ComboBox DockPanel.Dock="Top"
-				  ItemsSource="{Binding ElementBuilders}"
-				  SelectedItem="{Binding ElementBuilder}">
-			<ComboBox.ItemTemplate>
-				<DataTemplate DataType="local:ElementBuilder">
-					<TextBlock Text="{Binding Name}"/>
-				</DataTemplate>
-			</ComboBox.ItemTemplate>
-		</ComboBox>
+	<DockPanel Margin="10">		
 		<StackPanel Orientation="Horizontal"
 					DockPanel.Dock="Bottom"
 					HorizontalAlignment="Right">
@@ -32,6 +23,6 @@
 			<Button Content="Cancel"
 					x:Name="btn_cancel"/>
 		</StackPanel>
-		<ContentControl Content="{Binding ElementBuilder}"/>
+		<ContentControl x:Name="cntn_content"/>
 	</DockPanel>
 </Window>

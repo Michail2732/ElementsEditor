@@ -1,22 +1,21 @@
 ﻿using Avalonia.Data;
 using Avalonia.Data.Converters;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 
 namespace ElementsEditor
 {
-    public class PropertyFilterStrConverter : IValueConverter
+    public class CollectionAnyConverter : IValueConverter
     {
         public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
-            if (value is null)
-                return string.Empty;
-            var filter = value as IPropertyFilter;
-            if (filter != null)
+            var castedValue = value as ICollection;
+            if (castedValue != null)
             {
-                return $"{filter.Logic} {filter.PropertyName} {filter.Operation} {filter.GetValue()}";
+                return castedValue.Count > 0;
             }
             return new BindingNotification(new InvalidCastException(),
                                            BindingErrorType.Error);
@@ -25,6 +24,6 @@ namespace ElementsEditor
         public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
         {
             throw new NotImplementedException();
-        }        
+        }
     }
 }

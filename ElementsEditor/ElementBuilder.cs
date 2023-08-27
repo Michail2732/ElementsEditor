@@ -16,7 +16,7 @@ namespace ElementsEditor
         }
 
         public abstract Element Build();
-		public abstract void ResetProperties();
+		public abstract void ResetProperties();		
 
 		#region INotifyPropertyChanged impl
 		public event PropertyChangedEventHandler? PropertyChanged;

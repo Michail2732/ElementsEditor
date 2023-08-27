@@ -8,10 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Avalonia.Desktop" Version="11.0.3" />
+    <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ElementsEditorView.axaml.cs">
+    <Compile Update="Views\ModalWindow.axaml.cs">
+      <DependentUpon>ModalWindow.axaml</DependentUpon>
+    </Compile>
+    <Compile Update="Views\ElementsEditorView.axaml.cs">
       <DependentUpon>%(Filename)</DependentUpon>
     </Compile>
   </ItemGroup>

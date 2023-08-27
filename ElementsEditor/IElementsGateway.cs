@@ -10,13 +10,14 @@ using System.Threading.Tasks;
 
 namespace ElementsEditor
 {
-    public interface IElementsGateway        
+    public interface IElementsGateway<TElement>
+        where TElement : Element
     {                
         long GetCount(Query query);                
         Task<long> GetCountAsync(Query query, CancellationToken ct);
-        Element[] GetElements(Query query);
-        Task<Element[]> GetElementsAsync(Query query, CancellationToken ct);
-        void SaveChanges(IReadOnlyList<Element> changesElements);
-        Task SaveChangesAsync(IReadOnlyList<Element> changesElements, CancellationToken ct);
+        TElement[] GetElements(Query query);
+        Task<TElement[]> GetElementsAsync(Query query, CancellationToken ct);
+        void SaveChanges(IReadOnlyList<TElement> changesElements);
+        Task SaveChangesAsync(IReadOnlyList<TElement> changesElements, CancellationToken ct);
     }
 }

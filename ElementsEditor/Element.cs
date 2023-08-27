@@ -44,8 +44,8 @@ namespace ElementsEditor
         }
 
         internal void ResetState()
-        {
-            State = _previousState;
+        {            
+            _state = _previousState;
             _previousState = ElementState.None;
         }        
 

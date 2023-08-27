@@ -9,18 +9,9 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ElementsEditor.Sample.MainWindow"
 		x:DataType="viewModels:MainWindowViewModel"
-        Title="ElementsEditor.Sample">
+        Title="ElementsEditor.Sample">	
 	<Grid RowDefinitions="* auto">
-		<editor:ElementsEditorView		
-		AllowAsyncSettings="True"
-		AllowPagginationSettings="True"		
-		EnablePaggination="True"
-		EnableAdding="True"
-		EnableRemoving="True"
-		ElementsBuilder="{Binding ProductBuilders}"
-		PageSize="40"
-		ItemsGateway="{Binding ProductGateway}"
-		FiltersSource="{Binding FiltersInfo}">
+		<editor:ElementsEditorView DataContext="{Binding ElementsEditorViewModel}">			
 			<editor:ElementsEditorView.DataTemplates>
 				<DataTemplate DataType="models:FridgeBuilder">
 					<StackPanel Orientation="Vertical">
@@ -57,7 +48,7 @@
 						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
 								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
 								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"></PathIcon>
-						<TextBlock Text="Холодильник "/>
+						<TextBlock Text="Fridge "/>
 						<TextBlock Text="{Binding Name}"/>
 						<HeaderedContentControl Header="Цена">
 							<NumericUpDown Value="{Binding Cost}"></NumericUpDown>
@@ -72,7 +63,7 @@
 						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
 								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
 								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"></PathIcon>
-						<TextBlock Text="Настольная лампа "/>
+						<TextBlock Text="Desk lamp "/>
 						<TextBlock Text="{Binding Name}"/>
 						<HeaderedContentControl Header="Цена">
 							<NumericUpDown Value="{Binding Cost}"></NumericUpDown>
@@ -87,7 +78,7 @@
 						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
 								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
 								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"></PathIcon>
-						<TextBlock Text="Арматура "/>
+						<TextBlock Text="Rebar "/>
 						<TextBlock Text="{Binding Name}"/>
 						<HeaderedContentControl Header="Цена">
 							<NumericUpDown Value="{Binding Cost}"></NumericUpDown>

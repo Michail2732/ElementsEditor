@@ -1,14 +1,14 @@
 ﻿namespace ElementsEditor
 {
-    public interface IPropertyFilterExecutor<TResult>
+    public interface IPropertyFilterExecutor<TElement, TResult>
+        where TElement: Element
     {
-        TResult Execute(Element element, StringPropertyFilter filter);
-        TResult Execute(Element element, IntPropertyFilter filter);
-        TResult Execute(Element element, DoublePropertyFilter filter);
-        TResult Execute(Element element, DecimalPropertyFilter filter);
-        TResult Execute(Element element, DateTimePropertyFilter filter);
-        TResult Execute(Element element, BoolPropertyFilter filter);
-        TResult Execute(Element element, CustomPropertyFilter filter);
+        TResult Execute(TElement element, StringPropertyFilter filter);
+        TResult Execute(TElement element, IntPropertyFilter filter);
+        TResult Execute(TElement element, DoublePropertyFilter filter);
+        TResult Execute(TElement element, DecimalPropertyFilter filter);
+        TResult Execute(TElement element, DateTimePropertyFilter filter);
+        TResult Execute(TElement element, BoolPropertyFilter filter);        
     }
 
 }

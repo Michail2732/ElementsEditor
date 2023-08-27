@@ -13,63 +13,62 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ElementsEditor.Sample.ViewModels
-{ 
+{
 	public class MainWindowViewModel : INotifyPropertyChanged
 	{
-		public IEnumerable Products { get; }
-		public IElementsGateway ProductGateway { get; }
-		public IEnumerable<PropertyFilterFactory> FiltersInfo { get; }
-		public IEnumerable<ElementBuilder> ProductBuilders { get; }
+		public ElementsEditorViewModel<Product> ElementsEditorViewModel { get;}		
 
 		public MainWindowViewModel()
 		{
-			var products = GenerateProducts();
-			Products = products;
-            ProductGateway = new ElementsCollectionGateway(products)
-			{
-				DebugDelay = 700
-			};
-			FiltersInfo = GenerateProductFilters();
-			ProductBuilders = GeneratProductBuilders();
-
+			var products = GenerateElements();
+			ElementsEditorViewModel = new ElementsEditorViewModel<Product>(
+                new ElementsCollectionGateway<Product>(products)
+                {
+                    DebugDelay = 700
+                },
+				pageSize: 40,
+				filterFactories: GenerateFilterDescriptors(),
+				elementBuilders: GeneratElementBuilders(),
+				enableRemoving: true
+            );						
         }		
 
 
-		private IEnumerable<Element> GenerateProducts()
+		private IEnumerable<Product> GenerateElements()
 		{
 			int count = 1000;
 			var products = new List<Product>(count);
 			for (int i = 0; i < count; i++)
 			{
 				if (i % 5 == 0)
-					products.Add(new DeskLamp(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Electros sa{i}", i + 259 / 2));
+					products.Add(new DeskLamp(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Electros sa-{i}", i + 259 / 2));
 				else if (i % 3 == 0)
-					products.Add(new Rebar(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Armatura {i}", $"PT1{i % 2}-NZ{i}"));
+					products.Add(new Rebar(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"A-1(240)-{i}", $"PT1{i % 2}-NZ{i}"));
 				else if (i % 2 == 0)
-					products.Add(new Fridge(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Indesit LX{i}", -(i % 100 + 13)));
+					products.Add(new Fridge(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Indesit LX-{i}", -(i % 100 + 13)));
 				else
-					products.Add(new Rebar(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Indesit LX{i}", $"HT1{i % 2}-PR{i}"));
+					products.Add(new Rebar(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"A-1(300)-{i}", $"HT1{i % 2}-PR{i}"));
             }
 			return products;
 		}
 
-		private IEnumerable<PropertyFilterFactory> GenerateProductFilters()
+		private IEnumerable<PropertyFilterDescriptor> GenerateFilterDescriptors()
 		{
-			List<PropertyFilterFactory> filters = new List<PropertyFilterFactory>();
-			filters.Add(new PropertyFilterFactory(nameof(Product.Cost), GetCostProperty));
-            filters.Add(new PropertyFilterFactory(nameof(Product.Name), GetNameProperty));
-            filters.Add(new PropertyFilterFactory(nameof(Fridge.Temperature), GetTemperatureProperty));
+			List<PropertyFilterDescriptor> filters = new List<PropertyFilterDescriptor>();
+			filters.Add(new PropertyFilterDescriptor(nameof(Product.Cost), GetCostProperty));
+            filters.Add(new PropertyFilterDescriptor(nameof(Product.Name), GetNameProperty));
+            filters.Add(new PropertyFilterDescriptor(nameof(Fridge.Temperature), GetTemperatureProperty));
 			return filters;
         }
 
 
-		public IEnumerable<ElementBuilder> GeneratProductBuilders()
+		public IEnumerable<ElementBuilder> GeneratElementBuilders()
 		{
 			return new List<ElementBuilder>()
 			{
-				new FridgeBuilder("Создать холодильник"),
-				new RebarBuilder("Создать арматуру"),
-				new DeskLampBuilder("Создать настольную лампу")
+				new FridgeBuilder("Create fridge"),
+				new RebarBuilder("Create rebar"),
+				new DeskLampBuilder("Create desklamp")
 			};
 		}
 
