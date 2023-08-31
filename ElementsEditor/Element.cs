@@ -14,6 +14,7 @@ namespace ElementsEditor
     {        
         private AccessRights _accessRights;
         private ElementState _previousState;
+        private Element? _previousStateElement;
 
         public Element(string id, AccessRights accessRights)
         {
@@ -24,7 +25,8 @@ namespace ElementsEditor
         internal IElementsStateWatcher? StateWatcher { get; set; }        
         
         public string Id { get; }
-        
+
+        public AccessRights Access => _accessRights;
         public bool CanModify => _accessRights.HasFlag(AccessRights.Write);
 
 
@@ -35,19 +37,27 @@ namespace ElementsEditor
             internal set
             {
                 if (value >= _state)
-                {
+                {                    
                     _previousState = _state;
                     _state = value;
                     _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(State)));
+                    StateWatcher!.OnChangeState(this);
                 }                    
             } 
         }
 
-        internal void ResetState()
-        {            
-            _state = _previousState;
+        internal Element ResetState()
+        {
+            Element result = _state == ElementState.Modified ? _previousStateElement! :this;            
+            _state = _previousState;            
             _previousState = ElementState.None;
-        }        
+            return result;
+        }
+
+        protected virtual Element Clone()
+        {
+            return (Element)MemberwiseClone();
+        }
 
         #region INotifyPropertyChanged impl
         private event PropertyChangedEventHandler? _propertyChanged;        
@@ -63,9 +73,11 @@ namespace ElementsEditor
         {
             if (oldValue?.Equals(newValue) == true)
                 return;
+            if (_state == ElementState.None)
+                _previousStateElement = Clone();
             oldValue = newValue;
             State = ElementState.Modified;
-            _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+            _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));            
         }        
         #endregion implement INotifyPropertyChanged
 

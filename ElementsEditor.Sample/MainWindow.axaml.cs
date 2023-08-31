@@ -9,25 +9,10 @@ namespace ElementsEditor.Sample
 {
     public partial class MainWindow : Window
     {        
-        public MainWindow()
+        public MainWindow(MainWindowViewModel viewModel)
         {            
             InitializeComponent();
-            DataContext = new MainWindowViewModel();            
-            //btn_change_itemsSource.Click += (s, a) =>
-            //{
-            //    int count = 10000;
-            //    var array = new string[count];
-            //    for (int i = 0; i < count; i++)
-            //    {
-            //        array[i] = $"[{DateTime.Now}] item {i}";                    
-            //    }
-            //    var sw = new Stopwatch();
-            //    sw.Start();
-            //    lbx_items.ItemsSource = array;
-            //    sw.Stop();
-            //    tbl_renderTime.Text = sw.ElapsedMilliseconds.ToString() + "ms";                
-            //    sw.Reset();
-            //};                        
+            DataContext = viewModel;                        
         }
     }
 }

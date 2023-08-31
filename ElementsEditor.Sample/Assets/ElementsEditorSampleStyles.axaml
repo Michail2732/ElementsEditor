@@ -6,6 +6,16 @@
 	<Style Selector=":is(Button).editor_toolbar_button">
 		<Setter Property="Background" Value="{StaticResource middle_sky_blue}"/>
 		<Setter Property="Foreground" Value="{StaticResource dark_violet}"/>
+		<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Transitions">
+				<Setter.Value>
+					<Transitions>
+						<BrushTransition Property="Background" Duration="0:0:0.2" />
+						<BrushTransition Property="Foreground" Duration="0:0:0.2"/>
+					</Transitions>
+				</Setter.Value>
+			</Setter>
+		</Style>
 		<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
 			<Setter Property="Background" Value="{StaticResource light_sky_blue}"/>
 		</Style>
@@ -89,5 +99,26 @@
 
 	<Style Selector=":is(Panel).editor_filterring_panel">
 		<Setter Property="Background" Value="{StaticResource gray}"/>
+		
 	</Style>
+
+	<Style Selector="ListBox.editor_elements_listbox">				
+		<Setter Property="Transitions">
+			<Setter.Value>
+				<Transitions>
+					<DoubleTransition Property="Height" Duration="0:0:5"/>
+				</Transitions>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+	<Style Selector=":is(TemplatedControl).elements_input_field">
+		<Setter Property="MaxWidth" Value="300"/>
+		<Setter Property="Width" Value="150"/>		
+	</Style>
+
+	<Style Selector="Label.elements_field_name">
+		<Setter Property="FontWeight"  Value="Bold"/>		
+	</Style>
+	
 </Styles>

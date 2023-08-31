@@ -16,15 +16,19 @@
     <PackageReference Include="Avalonia.Fonts.Inter" Version="11.0.3" />
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
   </ItemGroup>
 
 
   <ItemGroup>
-    <Folder Include="Views\" />
-  </ItemGroup>
-
-
-  <ItemGroup>
+    <ProjectReference Include="..\ElementsEditor.Gateway\ElementsEditor.Gateway.csproj" />
     <ProjectReference Include="..\ElementsEditor\ElementsEditor.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

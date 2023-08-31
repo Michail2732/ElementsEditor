@@ -33,10 +33,9 @@ namespace ElementsEditor
         public bool TryGetPropertyValue(Element element, out TProperty? value)
         {
 			return _propertyExtractor(element, out value);            
-        }        
+        }
 
-		public abstract TResult Execute<TElement, TResult>(TElement element, IPropertyFilterExecutor<TElement, TResult> executor)
-			where TElement: Element;       
+        public abstract TResult Convert<TResult>(IPropertyFilterConverter<TResult> executor);			   
     }
 
     public sealed class StringPropertyFilter : PropertyFilter<string>
@@ -51,9 +50,9 @@ namespace ElementsEditor
                 throw new ArgumentException("String filter must have ConditionOperation - {Equals, NotEquals, Contains, StartWith, EndWith}");
         }
 
-        public override TResult Execute<TElement, TResult>(TElement element, IPropertyFilterExecutor<TElement, TResult> executor)
+        public override TResult Convert<TResult>(IPropertyFilterConverter<TResult> executor)
         {
-            return executor.Execute(element, this);
+            return executor.Convert(this);
         }
     }
 
@@ -69,9 +68,9 @@ namespace ElementsEditor
                 throw new ArgumentException("Int filter must have ConditionOperation - {Equals, NotEquals, Large, LargeOrEquals, Less, LessOrEquals,}");
         }
 
-        public override TResult Execute<TElement, TResult>(TElement element, IPropertyFilterExecutor<TElement, TResult> executor)
+        public override TResult Convert<TResult>(IPropertyFilterConverter<TResult> executor)
         {
-            return executor.Execute(element, this);
+            return executor.Convert(this);
         }
     }
 
@@ -87,9 +86,9 @@ namespace ElementsEditor
                 throw new ArgumentException("Double filter must have ConditionOperation - {Equals, NotEquals, Large, LargeOrEquals, Less, LessOrEquals,}");
         }
 
-        public override TResult Execute<TElement, TResult>(TElement element, IPropertyFilterExecutor<TElement, TResult> executor)
+        public override TResult Convert<TResult>(IPropertyFilterConverter<TResult> executor)
         {
-            return executor.Execute(element, this);
+            return executor.Convert(this);
         }
     }
 
@@ -105,9 +104,9 @@ namespace ElementsEditor
                 throw new ArgumentException("Decimal filter must have ConditionOperation - {Equals, NotEquals, Large, LargeOrEquals, Less, LessOrEquals,}");
         }
 
-        public override TResult Execute<TElement, TResult>(TElement element, IPropertyFilterExecutor<TElement, TResult> executor)
+        public override TResult Convert<TResult>(IPropertyFilterConverter<TResult> executor)
         {
-            return executor.Execute(element, this);
+            return executor.Convert(this);
         }
     }
 
@@ -123,9 +122,9 @@ namespace ElementsEditor
                 throw new ArgumentException("Bool filter must have ConditionOperation - {Equals, NotEquals}");
         }
 
-        public override TResult Execute<TElement, TResult>(TElement element, IPropertyFilterExecutor<TElement, TResult> executor)
+        public override TResult Convert<TResult>(IPropertyFilterConverter<TResult> executor)
         {
-            return executor.Execute(element, this);
+            return executor.Convert(this);
         }
     }
 
@@ -141,9 +140,9 @@ namespace ElementsEditor
                 throw new ArgumentException("DateTime filter must have ConditionOperation - {Equals, NotEquals, Large, LargeOrEquals, Less, LessOrEquals}");
         }
 
-        public override TResult Execute<TElement, TResult>(TElement element, IPropertyFilterExecutor<TElement, TResult> executor)
+        public override TResult Convert<TResult>(IPropertyFilterConverter<TResult> executor)
         {
-            return executor.Execute(element, this);
+            return executor.Convert(this);
         }
     }
 

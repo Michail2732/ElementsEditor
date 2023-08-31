@@ -1,4 +1,5 @@
-﻿using ElementsEditor.Sample.Models;
+﻿using ElementsEditor.Gateway.PostgresDb;
+using ElementsEditor.Sample.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,14 +19,10 @@ namespace ElementsEditor.Sample.ViewModels
 	{
 		public ElementsEditorViewModel<Product> ElementsEditorViewModel { get;}		
 
-		public MainWindowViewModel()
-		{
-			var products = GenerateElements();
+		public MainWindowViewModel(DbGateway<Product> gateway)
+		{			
 			ElementsEditorViewModel = new ElementsEditorViewModel<Product>(
-                new ElementsCollectionGateway<Product>(products)
-                {
-                    DebugDelay = 700
-                },
+                gateway,
 				pageSize: 40,
 				filterFactories: GenerateFilterDescriptors(),
 				elementBuilders: GeneratElementBuilders(),

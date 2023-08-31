@@ -4,7 +4,7 @@
 	{
         Logic Logic { get; }        
         ConditionOperation Operation { get; }                
-        TResult Execute<TElement, TResult>(TElement element, IPropertyFilterExecutor<TElement, TResult> executor) where TElement : Element;        
+        TResult Convert<TResult>(IPropertyFilterConverter<TResult> executor);        
     }
 
 }

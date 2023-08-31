@@ -7,23 +7,25 @@ using System.Threading.Tasks;
 
 namespace ElementsEditor
 {
-    public class ElementsCollectionGateway<TELement> : IElementsGateway<TELement>
-        where TELement : Element
+    public class ElementsCollectionGateway<TElement> : IElementsGateway<TElement>
+        where TElement : Element
     {
-        private readonly List<TELement> _elements;
-        internal List<TELement> Elements => _elements;
+        private readonly List<TElement> _elements;
+        private readonly PropertyFilterToFuncConverter<TElement> _filterConverter;
+        internal List<TElement> Elements => _elements;
 
         public int DebugDelay { get; set; }
 
-        public ElementsCollectionGateway(IEnumerable<TELement> elements)
+        public ElementsCollectionGateway(IEnumerable<TElement> elements)
         {
-            _elements = new List<TELement>(elements);
+            _elements = new List<TElement>(elements);
+            _filterConverter = new PropertyFilterToFuncConverter<TElement>();
         }
 
         public long GetCount(Query query)
         {
-            Func<TELement, bool>? filter1 = null;
-            Func<TELement, bool>? filter2 = null;
+            Func<TElement, bool>? filter1 = null;
+            Func<TElement, bool>? filter2 = null;
             if (query.Filters != null)
                 filter1 = BuildFuncFilter(query.Filters);
             if (query.ExcludedIds != null)
@@ -37,9 +39,9 @@ namespace ElementsEditor
             return GetCount(query);
         }
 
-        public TELement[] GetElements(Query query)
+        public TElement[] GetElements(Query query)
         {
-            IEnumerable<TELement> elements = _elements;
+            IEnumerable<TElement> elements = _elements;
             
             if (query.Filters != null)
             {
@@ -56,15 +58,15 @@ namespace ElementsEditor
             return elements.ToArray();
         }
 
-        public async Task<TELement[]> GetElementsAsync(Query query, CancellationToken ct)
+        public async Task<TElement[]> GetElementsAsync(Query query, CancellationToken ct)
         {
             await Task.Delay(DebugDelay);
             return GetElements(query);
         }        
 
-        public void SaveChanges(IReadOnlyList<TELement> changesElements)
+        public void SaveChanges(IReadOnlyList<TElement> changesElements)
         {
-            foreach (TELement element in changesElements)
+            foreach (TElement element in changesElements)
             {               
                 if (element.State == ElementState.Removed)
                     _elements.Remove(element);
@@ -73,15 +75,15 @@ namespace ElementsEditor
             }
         }
 
-        public async Task SaveChangesAsync(IReadOnlyList<TELement> changesElements, CancellationToken ct)
+        public async Task SaveChangesAsync(IReadOnlyList<TElement> changesElements, CancellationToken ct)
         {
             await Task.Delay(DebugDelay);
             SaveChanges(changesElements);
         }
 
-        private Func<TELement, bool> BuildFuncFilter(IReadOnlyList<IPropertyFilter> filters)
+        private Func<TElement, bool> BuildFuncFilter(IReadOnlyList<IPropertyFilter> filters)
         {
-            return new FuncFilterExecutor<TELement>(filters).Execute;
+            return _filterConverter.Convert(filters);
         }
     }
 }

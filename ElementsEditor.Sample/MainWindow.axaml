@@ -44,48 +44,72 @@
 					</StackPanel>
 				</DataTemplate>
 				<DataTemplate DataType="{x:Type models:Fridge}">					
-					<StackPanel Orientation="Horizontal">						
+					<StackPanel Orientation="Horizontal">
 						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
 								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
-								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"></PathIcon>
-						<TextBlock Text="Fridge "/>
-						<TextBlock Text="{Binding Name}"/>
-						<HeaderedContentControl Header="Цена">
-							<NumericUpDown Value="{Binding Cost}"></NumericUpDown>
-						</HeaderedContentControl>
-						<HeaderedContentControl Header="Температура">
-							<NumericUpDown Value="{Binding Temperature}"/>
-						</HeaderedContentControl>
+								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"
+								  Classes="position_middle_horizontal">
+						</PathIcon>
+						<Label Classes="position_middle_horizontal elements_field_name"
+							   Content="Наименование:"/>
+						<TextBlock Classes="position_middle_horizontal"
+								   Text="Rebar "/>
+						<TextBlock Classes="position_middle_horizontal"
+								   Text="{Binding Name}"/>
+						<Label Classes="position_middle_horizontal elements_field_name"
+							   Content="Цена:"/>
+						<NumericUpDown Value="{Binding Cost, Mode=TwoWay}"
+									   Classes="position_middle_horizontal elements_input_field"/>
+						<Label Classes="position_middle_horizontal elements_field_name"
+							   Content="Температура:"/>
+						<NumericUpDown Value="{Binding Temperature, Mode=TwoWay}"
+									   Classes="position_middle_horizontal elements_input_field"/>						
 					</StackPanel>
 				</DataTemplate>
 				<DataTemplate DataType="{x:Type models:DeskLamp}">
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
 								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
-								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"></PathIcon>
-						<TextBlock Text="Desk lamp "/>
-						<TextBlock Text="{Binding Name}"/>
-						<HeaderedContentControl Header="Цена">
-							<NumericUpDown Value="{Binding Cost}"></NumericUpDown>
-						</HeaderedContentControl>
-						<HeaderedContentControl Header="Световой поток">
-							<NumericUpDown Value="{Binding Lumen}"/>
-						</HeaderedContentControl>
+								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"
+								  Classes="position_middle_horizontal">
+						</PathIcon>
+						<Label Classes="position_middle_horizontal elements_field_name"
+							   Content="Наименование:"/>
+						<TextBlock Classes="position_middle_horizontal"
+								   Text="Rebar "/>
+						<TextBlock Classes="position_middle_horizontal"
+								   Text="{Binding Name}"/>
+						<Label Classes="position_middle_horizontal elements_field_name"
+							   Content="Цена:"/>
+						<NumericUpDown Value="{Binding Cost, Mode=TwoWay}"
+									   Classes="position_middle_horizontal elements_input_field"/>
+						<Label Classes="position_middle_horizontal elements_field_name"
+							   Content="Плотность света:"/>
+						<NumericUpDown Value="{Binding Lumen, Mode=TwoWay}"
+									   Classes="position_middle_horizontal elements_input_field"/>
 					</StackPanel>
 				</DataTemplate>
 				<DataTemplate DataType="{x:Type models:Rebar}">
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
 								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
-								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"></PathIcon>
-						<TextBlock Text="Rebar "/>
-						<TextBlock Text="{Binding Name}"/>
-						<HeaderedContentControl Header="Цена">
-							<NumericUpDown Value="{Binding Cost}"></NumericUpDown>
-						</HeaderedContentControl>
-						<HeaderedContentControl Header="Тип">
-							<TextBox Text="{Binding Type}"/>
-						</HeaderedContentControl>
+								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"
+								  Classes="position_middle_horizontal">							
+						</PathIcon>
+						<Label Classes="position_middle_horizontal elements_field_name"
+							   Content="Наименование:"/>
+						<TextBlock Classes="position_middle_horizontal"
+								   Text="Rebar "/>
+						<TextBlock Classes="position_middle_horizontal" 
+								   Text="{Binding Name}"/>
+						<Label Classes="position_middle_horizontal elements_field_name"
+							   Content="Цена:"/>
+						<NumericUpDown Value="{Binding Cost, Mode=TwoWay}"
+									   Classes="position_middle_horizontal elements_input_field"/>
+						<Label Content="Тип:"
+							   Classes="position_middle_horizontal elements_field_name"/>
+						<TextBox Text="{Binding Type, Mode=TwoWay}"
+								 Classes="position_middle_horizontal elements_input_field"/>
 					</StackPanel>
 				</DataTemplate>
 			</editor:ElementsEditorView.DataTemplates>

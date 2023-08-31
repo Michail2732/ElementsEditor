@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElementsEditor", "ElementsEditor\ElementsEditor.csproj", "{55306985-7C53-4C55-978F-31E7A395F526}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor", "ElementsEditor\ElementsEditor.csproj", "{55306985-7C53-4C55-978F-31E7A395F526}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElementsEditor.Sample", "ElementsEditor.Sample\ElementsEditor.Sample.csproj", "{885464DB-E715-4C6F-93D1-4F42053E0467}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor.Sample", "ElementsEditor.Sample\ElementsEditor.Sample.csproj", "{885464DB-E715-4C6F-93D1-4F42053E0467}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor.Gateway", "ElementsEditor.Gateway\ElementsEditor.Gateway.csproj", "{2AC3CC68-4590-4CAF-AB41-8F533C32BB59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{885464DB-E715-4C6F-93D1-4F42053E0467}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{885464DB-E715-4C6F-93D1-4F42053E0467}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{885464DB-E715-4C6F-93D1-4F42053E0467}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AC3CC68-4590-4CAF-AB41-8F533C32BB59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AC3CC68-4590-4CAF-AB41-8F533C32BB59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AC3CC68-4590-4CAF-AB41-8F533C32BB59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AC3CC68-4590-4CAF-AB41-8F533C32BB59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
