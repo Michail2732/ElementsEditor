@@ -39,6 +39,7 @@
 				 SelectedItems="{Binding SelectedFilters}"
 				 x:Name="lbx_filters"
 				 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+				 Background="White"
 				 ItemTemplate="{StaticResource editor_filters_template}">						
 		</ListBox>
 	</DockPanel>	

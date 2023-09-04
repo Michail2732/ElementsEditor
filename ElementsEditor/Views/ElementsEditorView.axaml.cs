@@ -1,4 +1,5 @@
 using Avalonia;
+using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
@@ -58,7 +59,7 @@ namespace ElementsEditor
 			lbx_filters.ItemsView.CollectionChanged += (s, e) =>
 			{				
 				btn_show_filters_list.IsVisible = lbx_filters.ItemsView.Count > 0;
-            };
+            };			
             btn_addNewItem.Click += AddNewElementButtonClick_Handler;
 			btn_show_filters_list.Click += ShowFiltersListButtonCLick_Handler;
         }

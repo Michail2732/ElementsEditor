@@ -30,32 +30,32 @@ namespace ElementsEditor.Gateway.PostgresDb
 
         public string Convert(StringPropertyFilter filter)
         {
-            return $"{LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation, filter.Value)} ";
+            return $" {LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation, filter.Value ?? "")} ";
         }
 
         public string Convert(IntPropertyFilter filter)
         {
-            return $"{LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
+            return $" {LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
         }
 
         public string Convert(DoublePropertyFilter filter)
         {
-            return $"{LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
+            return $" {LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
         }
 
         public string Convert(DecimalPropertyFilter filter)
         {
-            return $"{LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
+            return $" {LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
         }
 
         public string Convert(DateTimePropertyFilter filter)
         {
-            return $"{LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
+            return $" {LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
         }
 
         public string Convert(BoolPropertyFilter filter)
         {
-            return $"{LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
+            return $" {LogicToDb(filter.Logic)} {_map.GetPropertyNameInDb(filter.PropertyName).ColumnName} {OperatorToDb(filter.Operation)} {filter.Value}";
         }
 
         private string LogicToDb(Logic logic)

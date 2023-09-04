@@ -40,7 +40,7 @@ namespace ElementsEditor.Gateway.PostgresDb
 
         public Task<long> GetCountAsync(Query query, CancellationToken ct)
         {
-            return new Task<long>(() => GetCount(query), ct);
+            return Task.Run(() => GetCount(query), ct);
         }
 
         public TElement[] GetElements(Query query)
@@ -64,7 +64,7 @@ namespace ElementsEditor.Gateway.PostgresDb
 
         public Task<TElement[]> GetElementsAsync(Query query, CancellationToken ct)
         {
-            return new Task<TElement[]>(() => GetElements(query), ct);
+            return Task.Run(() => GetElements(query), ct);            
         }
 
         public void SaveChanges(IReadOnlyList<TElement> changesElements)
@@ -79,7 +79,7 @@ namespace ElementsEditor.Gateway.PostgresDb
                     else if (changeElement.State == ElementState.New)
                         sb.Append("\n" + _productMapLocator.GetMap(changeElement).CreateInsertQuery(changeElement, _propertyMap));
                     else if (changeElement.State == ElementState.Removed)
-                        sb.Append("\n" + $"delete from {_propertyMap.TableName} where {_propertyMap.GetPropertyNameInDb(nameof(Element.Id))} = '{changeElement}'");
+                        sb.Append("\n" + $"delete from {_propertyMap.TableName} where {_propertyMap.GetPropertyNameInDb(nameof(Element.Id)).ColumnName} = '{changeElement.Id}';");
                 }
                 connection.Open();
                 var transaction = connection.BeginTransaction();

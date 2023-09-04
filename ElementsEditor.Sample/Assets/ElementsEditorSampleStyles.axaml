@@ -61,6 +61,16 @@
 						 Button.editor_filterring_apply-filter_button,
 						 Button.editor_filterring_add-filter_button,
 						 Button.editor_filterring_delete-applied-filter_button">
+		<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+			<Setter Property="Transitions">
+				<Setter.Value>
+					<Transitions>
+						<BrushTransition Property="Background" Duration="0:0:0.2" />
+						<BrushTransition Property="Foreground" Duration="0:0:0.2"/>
+					</Transitions>
+				</Setter.Value>
+			</Setter>
+		</Style>
 		<Setter Property="Background" Value="{StaticResource middle_gray}"/>
 		<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
 			<Setter Property="Foreground" Value="{StaticResource dark}" />

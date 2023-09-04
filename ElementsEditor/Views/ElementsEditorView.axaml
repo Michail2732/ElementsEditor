@@ -165,7 +165,32 @@
 				 ItemsSource="{Binding Filters}"
 				 Classes="editor_filterring_listbox position_middle_horizontal"
 				 ScrollViewer.HorizontalScrollBarVisibility="Auto"
-				 ItemTemplate="{StaticResource editor_filters_template}">				
+				 ItemTemplate="{StaticResource editor_filters_template}">
+				<ListBox.Styles>
+					<Style Selector="ListBoxItem">
+						<Style.Animations>
+							<Animation Duration="0:0:0.4"
+									   PlaybackDirection="Normal">
+								<Animation.Easing>
+									<CubicEaseInOut/>
+								</Animation.Easing>
+								<KeyFrame Cue="0%">
+									<Setter Property="ScaleTransform.ScaleX" Value="0" />
+									<Setter Property="ScaleTransform.ScaleY" Value="0"/>
+								</KeyFrame>
+								<KeyFrame Cue="100%" KeySpline="">
+									<Setter Property="ScaleTransform.ScaleX" Value="1"/>
+									<Setter Property="ScaleTransform.ScaleY" Value="1"/>
+								</KeyFrame>
+							</Animation>
+						</Style.Animations>
+						<Setter Property="RenderTransform">
+							<Setter.Value>
+								<ScaleTransform/>
+							</Setter.Value>
+						</Setter>
+					</Style>											
+				</ListBox.Styles>
 				<ListBox.ItemsPanel>
 					<ItemsPanelTemplate>
 						<StackPanel Orientation="Horizontal"></StackPanel>

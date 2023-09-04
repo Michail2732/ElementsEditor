@@ -45,7 +45,10 @@ namespace ElementsEditor
 				{
 					foreach (var selectedFilter in SelectedFilters.ToArray())
 						Filters.Remove(selectedFilter);
-				},
+					if (Filters.Count > 0)
+                        Filters[0].IsFirst = true;
+
+                },
 				param => SelectedFilters.Count > 0
 			);
         }

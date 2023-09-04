@@ -26,13 +26,21 @@ namespace ElementsEditor
             get => _operation;
             set => SetAndRaisePropertyChanged(ref _operation, value);
         }
-
-        public bool IsFirst { get; internal set; }
+        
         public string PropertyName { get; }
         public ConditionOperation[] Operations { get; }        
         public IEnumerable? Values { get; }
         public ValueType ValueType { get; }
         public Logic[] Logics { get; }
+
+
+        private bool _isFirst;
+        public bool IsFirst
+        {
+            get => _isFirst;
+            set => SetAndRaisePropertyChanged(ref _isFirst, value);
+        }
+
 
         private TProperty? _value;
         public TProperty? Value

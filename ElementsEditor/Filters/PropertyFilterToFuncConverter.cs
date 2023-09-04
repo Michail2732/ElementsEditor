@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ElementsEditor
 {
-    public class PropertyFilterToFuncConverter<TElement>: IPropertyFilterConverter<Func<TElement,bool>>
+    public class PropertyFilterToFuncConverter<TElement> : IPropertyFilterConverter<Func<TElement, bool>>
         where TElement : Element
-    {        
+    {
         public Func<TElement, bool> Convert(IReadOnlyList<IPropertyFilter> filters)
         {
             if (filters.Count == 0)
@@ -85,7 +85,7 @@ namespace ElementsEditor
                 if (filter.TryGetPropertyValue(element, out var propertValue))
                     return filter.Operation.OperationExecute(propertValue, filter.Value);
                 return false;
-            };          
-        }                        
+            };
+        }
     }
 }

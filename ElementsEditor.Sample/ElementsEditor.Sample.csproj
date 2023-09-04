@@ -21,7 +21,7 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\ElementsEditor.Gateway\ElementsEditor.Gateway.csproj" />
+    <ProjectReference Include="..\ElementsEditor.Gateway\ElementsEditor.Gateway.PostgresDb.csproj" />
     <ProjectReference Include="..\ElementsEditor\ElementsEditor.csproj" />
   </ItemGroup>
 
@@ -30,5 +30,10 @@
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Views\" />
   </ItemGroup>
 </Project>

@@ -6,8 +6,9 @@
         </Border>
     </Design.PreviewWith>
 
-    <!-- Add Styles Here -->	
+    <!-- Add Styles Here -->
 
+	<!--Position styles-->
 	<Style Selector=":is(Control).position_middle_horizontal">
 		<Setter Property="Margin" Value="2 5 2 5"/>
 		<Setter Property="VerticalAlignment" Value="Center"/>
@@ -27,6 +28,8 @@
 		<Setter Property="VerticalAlignment" Value="Center"/>
 		<Setter Property="Margin" Value="2 5 10 5"/>
 	</Style>
+	<!--End position styles-->	
+
 
 	<Style Selector="PathIcon.IsElementEdited">
 		<Setter Property="Data" Value="{StaticResource editor_item_edit}"/>

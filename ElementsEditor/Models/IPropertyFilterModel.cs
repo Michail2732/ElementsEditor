@@ -5,7 +5,7 @@ namespace ElementsEditor
 {
     public interface IPropertyFilterModel: INotifyPropertyChanged
     {
-        bool IsFirst { get; }
+        bool IsFirst { get; set; }
         Logic SelectedLogic { get; set; }
         Logic[] Logics { get; }
         ConditionOperation SelectedOperation { get; set; }

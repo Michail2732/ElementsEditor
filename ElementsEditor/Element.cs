@@ -41,7 +41,7 @@ namespace ElementsEditor
                     _previousState = _state;
                     _state = value;
                     _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(State)));
-                    StateWatcher!.OnChangeState(this);
+                    StateWatcher?.OnChangeState(this);
                 }                    
             } 
         }

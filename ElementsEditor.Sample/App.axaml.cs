@@ -6,6 +6,7 @@ using ElementsEditor.Sample.Configuration;
 using ElementsEditor.Sample.PostgresDb;
 using ElementsEditor.Sample.ViewModels;
 using Microsoft.Extensions.Configuration;
+using System;
 
 namespace ElementsEditor.Sample
 {
@@ -19,7 +20,7 @@ namespace ElementsEditor.Sample
         public override void OnFrameworkInitializationCompleted()
         {
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-            {
+            {                
                 var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();                
                 DbTableColumnsMapConfigurator configurator = new DbTableColumnsMapConfigurator();
                 var tableColumnsMap = configurator.Configure(config);

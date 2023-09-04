@@ -3,6 +3,7 @@ using ElementsEditor.Sample.Models;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,24 +34,24 @@ namespace ElementsEditor.Sample.PostgresDb
         {
             var rebar = (Rebar)element;
             return $"insert into {propertyMap.TableName} (" +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Id))}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Access))}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Cost))}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Name))}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Type))}) " +
-                $"values ('{rebar.Id}', '{Enum.GetName(rebar.Access)}', {rebar.Cost}," +
-                $"'{rebar.Name}', '{rebar.Type}')";
+                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Id)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Access)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Cost)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Name)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Type)).ColumnName}) " +
+                $"values ('{rebar.Id}', '{Enum.GetName((DbAccessRigts)rebar.Access)}', {rebar.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
+                $"'{rebar.Name}', '{rebar.Type}');";
         }
 
         public string CreateUpdateQuery(Element element, DbTableColumnsMap propertyMap)
         {
             var rebar = (Rebar)element;
-            return $"update {propertyMap.TableName} set " +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Id))} = '{rebar.Id}'," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Access))} = '{Enum.GetName(rebar.Access)}'," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Cost))} = {rebar.Cost}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Name))} = '{rebar.Name}'," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Type))} = '{rebar.Type}'";
+            return $"update {propertyMap.TableName} set " +                
+                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Access)).ColumnName} = '{Enum.GetName((DbAccessRigts)rebar.Access)}'," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Cost)).ColumnName} = {rebar.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Name)).ColumnName} = '{rebar.Name}'," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Rebar.Type)).ColumnName} = '{rebar.Type}'" +
+                $" where {propertyMap.GetPropertyNameInDb(nameof(Rebar.Id)).ColumnName} = '{rebar.Id}';";
         }
     }
 }

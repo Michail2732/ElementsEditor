@@ -3,6 +3,7 @@ using ElementsEditor.Sample.Models;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,24 +34,24 @@ namespace ElementsEditor.Sample.PostgresDb
         {
             var fridge = (Fridge)element;
             return $"insert into {propertyMap.TableName} (" +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Id))}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Access))}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Cost))}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Name))}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Temperature))}) " +
-                $"values ('{fridge.Id}', '{Enum.GetName(fridge.Access)}', {fridge.Cost}," +
-                $"'{fridge.Name}', {fridge.Temperature})";
+                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Id)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Access)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Cost)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Name)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Temperature)).ColumnName}) " +
+                $"values ('{fridge.Id}', '{Enum.GetName((DbAccessRigts)fridge.Access)}', {fridge.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
+                $"'{fridge.Name}', {fridge.Temperature});";
         }
 
         public string CreateUpdateQuery(Element element, DbTableColumnsMap propertyMap)
         {
             var fridge = (Fridge)element;
-            return $"update {propertyMap.TableName} set " +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Id))} = '{fridge.Id}'," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Access))} = '{Enum.GetName(fridge.Access)}'," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Cost))} = {fridge.Cost}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Name))} = '{fridge.Name}'," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Temperature))} = {fridge.Temperature}";
+            return $"update {propertyMap.TableName} set " +                
+                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Access)).ColumnName} = '{Enum.GetName((DbAccessRigts)fridge.Access)}'," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Cost)).ColumnName} = {fridge.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Name)).ColumnName} = '{fridge.Name}'," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Fridge.Temperature)).ColumnName} = {fridge.Temperature}" +
+                $" where {propertyMap.GetPropertyNameInDb(nameof(Fridge.Id)).ColumnName} = '{fridge.Id}';";
         }
     }
 }

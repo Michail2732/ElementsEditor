@@ -42,12 +42,12 @@ namespace ElementsEditor
         public TElement[] GetElements(Query query)
         {
             IEnumerable<TElement> elements = _elements;
-            
+
             if (query.Filters != null)
             {
                 var filter = BuildFuncFilter(query.Filters);
                 elements = elements.Where(filter);
-            }                
+            }
             if (query.ExcludedIds != null)
                 elements = elements.Where(a => !query.ExcludedIds.Contains(a.Id));
             if (query.Offset.HasValue)
@@ -62,16 +62,16 @@ namespace ElementsEditor
         {
             await Task.Delay(DebugDelay);
             return GetElements(query);
-        }        
+        }
 
         public void SaveChanges(IReadOnlyList<TElement> changesElements)
         {
             foreach (TElement element in changesElements)
-            {               
+            {
                 if (element.State == ElementState.Removed)
                     _elements.Remove(element);
                 else if (element.State == ElementState.New)
-                    _elements.Add(element);                
+                    _elements.Add(element);
             }
         }
 
