@@ -21,7 +21,8 @@
 
 
   <ItemGroup>
-    <ProjectReference Include="..\ElementsEditor.Gateway\ElementsEditor.Gateway.PostgresDb.csproj" />
+    <ProjectReference Include="..\ElementsEditor.Gateway.MongoDb\ElementsEditor.Gateway.MongoDb.csproj" />
+    <ProjectReference Include="..\ElementsEditor.Gateway.PostgresDb\ElementsEditor.Gateway.PostgresDb.csproj" />
     <ProjectReference Include="..\ElementsEditor\ElementsEditor.csproj" />
   </ItemGroup>
 

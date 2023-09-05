@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor", "ElementsE
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor.Sample", "ElementsEditor.Sample\ElementsEditor.Sample.csproj", "{885464DB-E715-4C6F-93D1-4F42053E0467}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor.Gateway.PostgresDb", "ElementsEditor.Gateway\ElementsEditor.Gateway.PostgresDb.csproj", "{2AC3CC68-4590-4CAF-AB41-8F533C32BB59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor.Gateway.PostgresDb", "ElementsEditor.Gateway.PostgresDb\ElementsEditor.Gateway.PostgresDb.csproj", "{2AC3CC68-4590-4CAF-AB41-8F533C32BB59}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElementsEditor.Gateway.MongoDb", "ElementsEditor.Gateway.MongoDb\ElementsEditor.Gateway.MongoDb.csproj", "{F7664A88-E7C4-47DD-A580-27ABCE3DAFD2}"
 EndProject

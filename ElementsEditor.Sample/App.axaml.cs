@@ -32,20 +32,11 @@ namespace ElementsEditor.Sample
 
         private IElementsGateway<Product> GetGateway()
         {
-            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();            
+            var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             if (config["DataProvider"] == "Postgres")
-            {
-                DbTableColumnsMapConfigurator configurator = new DbTableColumnsMapConfigurator();
-                var tableColumnsMap = configurator.Configure(config);
-                DbElementMapsBuilder elementMapBuilder = new DbElementMapsBuilder();
-                elementMapBuilder.Add(new DbDeskLampMap()).Add(new DbFridgeMap()).Add(new DbKettleMap());
-                return new DbGateway<Product>(config.GetConnectionString("Default")!,
-                                              tableColumnsMap,
-                                              elementMapBuilder.Build());
-            }
+                return GatewaysFactory.CreatePostgres(config);
             else
-                return new ElementsCollectionGateway<Product>(ProductGenerator.Generate())
-                { DebugDelay = 600};
+                return GatewaysFactory.CreateInMemory(config);
         }       
     }
 }
