@@ -285,8 +285,11 @@ namespace ElementsEditor
                 else
                     _itemsGateway.SaveChanges(
                         _changedItemsGateway.Elements);
+                foreach (var element in _changedItemsGateway.Elements)                
+                    element.ResetState();                
                 _changedItemsGateway.Elements.Clear();
             }
+            catch (OperationCanceledException) { }
             catch (Exception e) { throw; }
             finally
             {
@@ -347,6 +350,7 @@ namespace ElementsEditor
                     Elements.Add(newElements[i]);
                 }
             }
+            catch (OperationCanceledException) { }
             catch (Exception e) { throw; }
             finally
             {
@@ -357,7 +361,8 @@ namespace ElementsEditor
 
         void IElementsStateWatcher.OnChangeState(Element element)
         {
-            if (!_changedItemsGateway.Elements.Contains(element))
+            if (!_changedItemsGateway.Elements.Contains(element)
+                && element.State != ElementState.None)
                 _changedItemsGateway.Elements.Add((TElement)element);
         }
 

@@ -57,29 +57,29 @@ namespace ElementsEditor.Sample.Models
     }
 
 
-    public class RebarBuilder : ProductBuilder
+    public class KettleBuilder : ProductBuilder
     {
-        public RebarBuilder(string name) : base(name)
+        public KettleBuilder(string name) : base(name)
         {
         }
 
-        private string? _type;
-        public string? Type
+        private int _power;
+        public int Power
         {
-            get => _type;
-            set => SetAndRaisePropertyChanged(ref _type, value);
+            get => _power;
+            set => SetAndRaisePropertyChanged(ref _power, value);
         }
 
         public override Element Build()
         {
-            return new Rebar(Guid.NewGuid().ToString(), AccessRights.All, Cost, ProductName, _type);
+            return new Kettle(Guid.NewGuid().ToString(), AccessRights.All, Cost, ProductName, _power);
         }
 
         public override void ResetProperties()
         {
             Cost = default;
             ProductName = string.Empty;
-            Type = string.Empty;
+            Power = default;
         }
     }
 

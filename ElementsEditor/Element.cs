@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ElementsEditor
 {
-
+    // todo: implement reset properties value after call ResetState
     public abstract class Element: INotifyPropertyChanged, IEquatable<Element?>
     {        
         private AccessRights _accessRights;
@@ -46,12 +46,11 @@ namespace ElementsEditor
             } 
         }
 
-        internal Element ResetState()
-        {
-            Element result = _state == ElementState.Modified ? _previousStateElement! :this;            
+        internal void ResetState()
+        {            
             _state = _previousState;            
             _previousState = ElementState.None;
-            return result;
+            _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(State)));            
         }
 
         protected virtual Element Clone()

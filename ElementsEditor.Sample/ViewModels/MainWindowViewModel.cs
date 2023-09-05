@@ -19,7 +19,7 @@ namespace ElementsEditor.Sample.ViewModels
 	{
 		public ElementsEditorViewModel<Product> ElementsEditorViewModel { get;}		
 
-		public MainWindowViewModel(DbGateway<Product> gateway)
+		public MainWindowViewModel(IElementsGateway<Product> gateway)
 		{			
 			ElementsEditorViewModel = new ElementsEditorViewModel<Product>(
                 gateway,
@@ -28,26 +28,7 @@ namespace ElementsEditor.Sample.ViewModels
 				elementBuilders: GeneratElementBuilders(),
 				enableRemoving: true
             );						
-        }		
-
-
-		private IEnumerable<Product> GenerateElements()
-		{
-			int count = 1000;
-			var products = new List<Product>(count);
-			for (int i = 0; i < count; i++)
-			{
-				if (i % 5 == 0)
-					products.Add(new DeskLamp(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Electros sa-{i}", i + 259 / 2));
-				else if (i % 3 == 0)
-					products.Add(new Rebar(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"A-1(240)-{i}", $"PT1{i % 2}-NZ{i}"));
-				else if (i % 2 == 0)
-					products.Add(new Fridge(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Indesit LX-{i}", -(i % 100 + 13)));
-				else
-					products.Add(new Rebar(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"A-1(300)-{i}", $"HT1{i % 2}-PR{i}"));
-            }
-			return products;
-		}
+        }				
 
 		private IEnumerable<PropertyFilterDescriptor> GenerateFilterDescriptors()
 		{
@@ -55,7 +36,9 @@ namespace ElementsEditor.Sample.ViewModels
 			filters.Add(new PropertyFilterDescriptor(nameof(Product.Cost), GetCostProperty));
             filters.Add(new PropertyFilterDescriptor(nameof(Product.Name), GetNameProperty));
             filters.Add(new PropertyFilterDescriptor(nameof(Fridge.Temperature), GetTemperatureProperty));
-			return filters;
+			filters.Add(new PropertyFilterDescriptor(nameof(DeskLamp.Lumen), GetLumenProperty));
+            filters.Add(new PropertyFilterDescriptor(nameof(Kettle.Power), GetPowerProperty));
+            return filters;
         }
 
 
@@ -64,7 +47,7 @@ namespace ElementsEditor.Sample.ViewModels
 			return new List<ElementBuilder>()
 			{
 				new FridgeBuilder("Create fridge"),
-				new RebarBuilder("Create rebar"),
+				new KettleBuilder("Create rebar"),
 				new DeskLampBuilder("Create desklamp")
 			};
 		}
@@ -89,6 +72,22 @@ namespace ElementsEditor.Sample.ViewModels
             result = fridge?.Temperature ?? default;
             return fridge is null ? false : true;
         }
+
+        private bool GetPowerProperty(Element element, out int result)
+        {
+            var kettle = element as Kettle;
+            result = kettle?.Power ?? default;
+            return kettle is null ? false : true;
+        }
+
+        private bool GetLumenProperty(Element element, out int result)
+        {
+            var deskLamp = element as DeskLamp;
+            result = deskLamp?.Lumen ?? default;
+            return deskLamp is null ? false : true;
+        }
+
+
 
         #region INotifyPropertyChanged impl
         public event PropertyChangedEventHandler? PropertyChanged;

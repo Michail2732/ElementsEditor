@@ -9,38 +9,43 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="ElementsEditor.Sample.MainWindow"
 		x:DataType="viewModels:MainWindowViewModel"
-        Title="ElementsEditor.Sample">	
+        Title="ElementsEditor.Sample">
+	<Window.Resources>
+		<StreamGeometry x:Key="kettle_icon">M12.5,3C7.81,3 4,5.69 4,9V9C4,10.19 4.5,11.34 5.44,12.33C4.53,13.5 4,14.96 4,16.5C4,17.64 4,18.83 4,20C4,21.11 4.89,22 6,22H19C20.11,22 21,21.11 21,20C21,18.85 21,17.61 21,16.5C21,15.28 20.66,14.07 20,13L22,11L19,8L16.9,10.1C15.58,9.38 14.05,9 12.5,9C10.65,9 8.95,9.53 7.55,10.41C7.19,9.97 7,9.5 7,9C7,7.21 9.46,5.75 12.5,5.75V5.75C13.93,5.75 15.3,6.08 16.33,6.67L18.35,4.65C16.77,3.59 14.68,3 12.5,3M12.5,11C12.84,11 13.17,11.04 13.5,11.09C10.39,11.57 8,14.25 8,17.5V20H6V17.5A6.5,6.5 0 0,1 12.5,11Z</StreamGeometry>
+		<StreamGeometry x:Key="fridge_icon">M7,2H17A2,2 0 0,1 19,4V9H5V4A2,2 0 0,1 7,2M19,19A2,2 0 0,1 17,21V22H15V21H9V22H7V21A2,2 0 0,1 5,19V10H19V19M8,5V7H10V5H8M8,12V15H10V12H8Z</StreamGeometry>
+		<StreamGeometry x:Key="desklamp_icon">M10.85 2L9.18 4.5L10.32 5.25L7.14 10H7C5.9 10 5 10.9 5 12C5 12.94 5.66 13.75 6.58 13.95L10.62 20H7V22H17V20H13L8.53 13.28C8.83 12.92 9 12.47 9 12C9 11.7 8.93 11.4 8.8 11.13L12 6.37C11.78 8.05 12.75 9.89 14.45 11L18.89 4.37C17.2 3.24 15.12 3.04 13.65 3.87L10.85 2M18.33 7L16.67 9.5C17.35 9.95 18.29 9.77 18.75 9.08C19.21 8.39 19 7.46 18.33 7M21.7 12.58L19.58 10.45L20.28 9.75L22.4 11.87L21.7 12.58M23 7H20V6H23V7M16 14V11H17V14H16Z</StreamGeometry>
+	</Window.Resources>
 	<Grid RowDefinitions="* auto">
 		<editor:ElementsEditorView DataContext="{Binding ElementsEditorViewModel}">			
 			<editor:ElementsEditorView.DataTemplates>
 				<DataTemplate DataType="models:FridgeBuilder">
 					<StackPanel Orientation="Vertical">
-						<TextBox Text="{Binding ProductName}"
+						<TextBox Text="{Binding ProductName, Mode=TwoWay}"
 								 Watermark="Input product name"/>
-						<NumericUpDown Value="{Binding Cost}"
+						<NumericUpDown Value="{Binding Cost, Mode=TwoWay}"
 									   Watermark="Input cost"/>
-						<NumericUpDown Value="{Binding Temperature}"
+						<NumericUpDown Value="{Binding Temperature, Mode=TwoWay}"
 									   Watermark="Input temperature"/>						
 					</StackPanel>
 				</DataTemplate>
 				<DataTemplate DataType="models:DeskLampBuilder">
 					<StackPanel Orientation="Vertical">
-						<TextBox Text="{Binding ProductName}"
+						<TextBox Text="{Binding ProductName, Mode=TwoWay}"
 								 Watermark="Input product name"/>
-						<NumericUpDown Value="{Binding Cost}"
+						<NumericUpDown Value="{Binding Cost, Mode=TwoWay}"
 									   Watermark="Input cost"/>
-						<NumericUpDown Value="{Binding Lumen}"
+						<NumericUpDown Value="{Binding Lumen, Mode=TwoWay}"
 									   Watermark="Input lumen"/>
 					</StackPanel>
 				</DataTemplate>
-				<DataTemplate DataType="models:RebarBuilder">
+				<DataTemplate DataType="models:KettleBuilder">
 					<StackPanel Orientation="Vertical">
-						<TextBox Text="{Binding ProductName}"
+						<TextBox Text="{Binding ProductName, Mode=TwoWay}"
 								 Watermark="Input rebar name"/>
-						<NumericUpDown Value="{Binding Cost}"
+						<NumericUpDown Value="{Binding Cost, Mode=TwoWay}"
 									   Watermark="Input cost"/>
-						<TextBox Text="{Binding Type}"
-								 Watermark="Input type"/>
+						<NumericUpDown Value="{Binding Power, Mode=TwoWay}"
+								 Watermark="Input power"/>
 					</StackPanel>
 				</DataTemplate>
 				<DataTemplate DataType="{x:Type models:Fridge}">					
@@ -50,18 +55,19 @@
 								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"
 								  Classes="position_middle_horizontal">
 						</PathIcon>
+						<PathIcon Data="{StaticResource fridge_icon}"
+								  Classes="position_middle_horizontal">							
+						</PathIcon>
 						<Label Classes="position_middle_horizontal elements_field_name"
-							   Content="Наименование:"/>
-						<TextBlock Classes="position_middle_horizontal"
-								   Text="Rebar "/>
+							   Content="Name:"/>
 						<TextBlock Classes="position_middle_horizontal"
 								   Text="{Binding Name}"/>
 						<Label Classes="position_middle_horizontal elements_field_name"
-							   Content="Цена:"/>
+							   Content="Cost:"/>
 						<NumericUpDown Value="{Binding Cost, Mode=TwoWay}"
 									   Classes="position_middle_horizontal elements_input_field"/>
 						<Label Classes="position_middle_horizontal elements_field_name"
-							   Content="Температура:"/>
+							   Content="Temperature:"/>
 						<NumericUpDown Value="{Binding Temperature, Mode=TwoWay}"
 									   Classes="position_middle_horizontal elements_input_field"/>						
 					</StackPanel>
@@ -73,42 +79,44 @@
 								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"
 								  Classes="position_middle_horizontal">
 						</PathIcon>
+						<PathIcon Data="{StaticResource desklamp_icon}"
+								  Classes="position_middle_horizontal">
+						</PathIcon>
 						<Label Classes="position_middle_horizontal elements_field_name"
-							   Content="Наименование:"/>
-						<TextBlock Classes="position_middle_horizontal"
-								   Text="Rebar "/>
+							   Content="Name:"/>
 						<TextBlock Classes="position_middle_horizontal"
 								   Text="{Binding Name}"/>
 						<Label Classes="position_middle_horizontal elements_field_name"
-							   Content="Цена:"/>
+							   Content="Cost:"/>
 						<NumericUpDown Value="{Binding Cost, Mode=TwoWay}"
 									   Classes="position_middle_horizontal elements_input_field"/>
 						<Label Classes="position_middle_horizontal elements_field_name"
-							   Content="Плотность света:"/>
+							   Content="Lumen:"/>
 						<NumericUpDown Value="{Binding Lumen, Mode=TwoWay}"
 									   Classes="position_middle_horizontal elements_input_field"/>
 					</StackPanel>
 				</DataTemplate>
-				<DataTemplate DataType="{x:Type models:Rebar}">
+				<DataTemplate DataType="{x:Type models:Kettle}">
 					<StackPanel Orientation="Horizontal">
 						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
 								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
 								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"
 								  Classes="position_middle_horizontal">							
 						</PathIcon>
+						<PathIcon Data="{StaticResource kettle_icon}"
+								  Classes="position_middle_horizontal">
+						</PathIcon>
 						<Label Classes="position_middle_horizontal elements_field_name"
-							   Content="Наименование:"/>
-						<TextBlock Classes="position_middle_horizontal"
-								   Text="Rebar "/>
+							   Content="Name:"/>
 						<TextBlock Classes="position_middle_horizontal" 
 								   Text="{Binding Name}"/>
 						<Label Classes="position_middle_horizontal elements_field_name"
-							   Content="Цена:"/>
+							   Content="Cost:"/>
 						<NumericUpDown Value="{Binding Cost, Mode=TwoWay}"
 									   Classes="position_middle_horizontal elements_input_field"/>
-						<Label Content="Тип:"
+						<Label Content="Power:"
 							   Classes="position_middle_horizontal elements_field_name"/>
-						<TextBox Text="{Binding Type, Mode=TwoWay}"
+						<NumericUpDown Value="{Binding Power, Mode=TwoWay}"
 								 Classes="position_middle_horizontal elements_input_field"/>
 					</StackPanel>
 				</DataTemplate>

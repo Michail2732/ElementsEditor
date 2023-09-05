@@ -64,19 +64,19 @@ namespace ElementsEditor.Sample.Models
     }
 
 
-    public sealed class Rebar : Product
+    public sealed class Kettle : Product
     {
-        public Rebar(string id, AccessRights accessRights, decimal cost, string name, string type) : base(id, accessRights, cost, name)
+        public Kettle(string id, AccessRights accessRights, decimal cost, string name, int power) : base(id, accessRights, cost, name)
         {
-            _type = type;
+            _power = power;
         }
 
 
-        private string _type;
-        public string Type
+        private int _power;
+        public int Power
         {
-            get => _type;
-            set => SetAndRaisePropertyChanged(ref _type, value);
+            get => _power;
+            set => SetAndRaisePropertyChanged(ref _power, value);
         }
 
     }
