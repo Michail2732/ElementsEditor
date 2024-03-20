@@ -49,7 +49,7 @@ namespace ElementsEditor
 
 		public ElementsEditorView()
 		{												
-			InitializeComponent();
+			InitializeComponent();			
 			lbx_elements.SelectionChanged += (s, e) =>
 			{
 				var viewModel = DataContext as IElementsEditorViewModel;
@@ -59,40 +59,12 @@ namespace ElementsEditor
 			lbx_filters.ItemsView.CollectionChanged += (s, e) =>
 			{				
 				btn_show_filters_list.IsVisible = lbx_filters.ItemsView.Count > 0;
-            };			
-            btn_addNewItem.Click += AddNewElementButtonClick_Handler;
-			btn_show_filters_list.Click += ShowFiltersListButtonCLick_Handler;
-        }
-
-		private async void ShowFiltersListButtonCLick_Handler(object sender, RoutedEventArgs e)
-		{
-            var viewModel = DataContext as IElementsEditorViewModel;
-            if (viewModel != null)
-            {
-                var modealWindow = new ModalWIndow(DataTemplates,
-					includeCancelButton: false);
-                modealWindow.View = new FiltersListView(new FiltersListViewModel(
-					viewModel.FilterDescriptors!,
-					viewModel.Filters));
-                var parentWindow = (Window)TopLevel.GetTopLevel(this)!;
-                await modealWindow.ShowDialog<Element>(parentWindow);                
-            }			
-        }
-
-
-		private async void AddNewElementButtonClick_Handler(object sender, RoutedEventArgs e)
-		{
-            var viewModel = DataContext as IElementsEditorViewModel;
-            if (viewModel != null)
-            {
-                var modealWindow = new ModalWIndow(DataTemplates);
-				modealWindow.View = new AddNewElementView(new AddElementViewModel(viewModel.ElementBuilders!));
-				var parentWindow = (Window)TopLevel.GetTopLevel(this)!;
-                var result = await modealWindow.ShowDialog<Element>(parentWindow);
-				if (result != null)
-					viewModel.AddNewElement(result);
-            }
-        }
+            };
+			this.DataContextChanged += (s, e) =>
+			{
+				ShowDialogHelper.RegisterViewViewModel(this, (IElementsEditorViewModel)DataContext!);
+			};
+        }				
         
 	}
 }

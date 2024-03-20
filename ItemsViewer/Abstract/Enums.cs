@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ElementsEditor
+namespace ItemsViewer.Abstract
 {
     public enum AccessRights
     {
@@ -38,12 +38,6 @@ namespace ElementsEditor
     {
         Or,
         And
-    }
-
-    public enum Result
-    {
-        Ok,
-        Cancel
     }
 
     public enum ValueType

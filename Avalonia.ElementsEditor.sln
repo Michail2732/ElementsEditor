@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor.Sample", "El
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor.Gateway.PostgresDb", "ElementsEditor.Gateway.PostgresDb\ElementsEditor.Gateway.PostgresDb.csproj", "{2AC3CC68-4590-4CAF-AB41-8F533C32BB59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElementsEditor.Gateway.MongoDb", "ElementsEditor.Gateway.MongoDb\ElementsEditor.Gateway.MongoDb.csproj", "{F7664A88-E7C4-47DD-A580-27ABCE3DAFD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ElementsEditor.Gateway.MongoDb", "ElementsEditor.Gateway.MongoDb\ElementsEditor.Gateway.MongoDb.csproj", "{F7664A88-E7C4-47DD-A580-27ABCE3DAFD2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

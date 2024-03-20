@@ -17,7 +17,11 @@ namespace ElementsEditor
         Task<long> GetCountAsync(Query query, CancellationToken ct);
         TElement[] GetElements(Query query);
         Task<TElement[]> GetElementsAsync(Query query, CancellationToken ct);
-        void SaveChanges(IReadOnlyList<TElement> changesElements);
-        Task SaveChangesAsync(IReadOnlyList<TElement> changesElements, CancellationToken ct);
+        void Remove(IEnumerable<TElement> elements);
+        Task RemoveAsync(IEnumerable<TElement> elements, CancellationToken ct);
+        void Add(TElement element);
+        Task AddAsync(TElement element, CancellationToken ct);
+        void SaveChanges(IEnumerable<TElement> changesElements);
+        Task SaveChangesAsync(IEnumerable<TElement> changesElements, CancellationToken ct);
     }
 }

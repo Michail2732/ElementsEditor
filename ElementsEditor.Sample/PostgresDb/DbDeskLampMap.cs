@@ -22,8 +22,7 @@ namespace ElementsEditor.Sample.PostgresDb
         public Element MapToModel(NpgsqlDataReader reader, DbTableColumnsMap propertyMap)
         {
             return new DeskLamp(
-                reader.GetFieldValue<Guid>(propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Id)).ColumnIndex).ToString(),
-                (AccessRights)Enum.Parse<DbAccessRigts>(reader.GetFieldValue<string>(propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Access)).ColumnIndex)),
+                reader.GetFieldValue<Guid>(propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Id)).ColumnIndex).ToString(),                
                 reader.GetFieldValue<decimal>(propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Cost)).ColumnIndex),
                 reader.GetFieldValue<string>(propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Name)).ColumnIndex),
                 reader.GetFieldValue<int>(propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Lumen)).ColumnIndex)
@@ -34,12 +33,11 @@ namespace ElementsEditor.Sample.PostgresDb
         {
             var deskLamp = (DeskLamp)element;
             return $"insert into {propertyMap.TableName} (" +
-                $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Id)).ColumnName}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Access)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Id)).ColumnName}," +                
                 $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Cost)).ColumnName}," +
                 $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Name)).ColumnName}," +
                 $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Lumen)).ColumnName}) " +
-                $"values ('{deskLamp.Id}', '{Enum.GetName((DbAccessRigts)deskLamp.Access)}', {deskLamp.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
+                $"values ('{deskLamp.Id}', {deskLamp.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
                 $"'{deskLamp.Name}', {deskLamp.Lumen});";
         }
 
@@ -47,7 +45,6 @@ namespace ElementsEditor.Sample.PostgresDb
         {
             var deskLamp = (DeskLamp)element;
             return $"update {propertyMap.TableName} set " +                
-                $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Access)).ColumnName} = '{Enum.GetName((DbAccessRigts)deskLamp.Access)}'," +
                 $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Cost)).ColumnName} = {deskLamp.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
                 $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Name)).ColumnName} = '{deskLamp.Name}'," +
                 $"{propertyMap.GetPropertyNameInDb(nameof(DeskLamp.Lumen)).ColumnName} = {deskLamp.Lumen}" +

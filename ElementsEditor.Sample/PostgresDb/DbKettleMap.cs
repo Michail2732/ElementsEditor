@@ -22,8 +22,7 @@ namespace ElementsEditor.Sample.PostgresDb
         public Element MapToModel(NpgsqlDataReader reader, DbTableColumnsMap propertyMap)
         {
             return new Kettle(
-                reader.GetFieldValue<Guid>(propertyMap.GetPropertyNameInDb(nameof(Kettle.Id)).ColumnIndex).ToString(),
-                (AccessRights)Enum.Parse<DbAccessRigts>(reader.GetFieldValue<string>(propertyMap.GetPropertyNameInDb(nameof(Kettle.Access)).ColumnIndex)),
+                reader.GetFieldValue<Guid>(propertyMap.GetPropertyNameInDb(nameof(Kettle.Id)).ColumnIndex).ToString(),                
                 reader.GetFieldValue<decimal>(propertyMap.GetPropertyNameInDb(nameof(Kettle.Cost)).ColumnIndex),
                 reader.GetFieldValue<string>(propertyMap.GetPropertyNameInDb(nameof(Kettle.Name)).ColumnIndex),
                 reader.GetFieldValue<int>(propertyMap.GetPropertyNameInDb(nameof(Kettle.Power)).ColumnIndex)
@@ -34,20 +33,18 @@ namespace ElementsEditor.Sample.PostgresDb
         {
             var kettle = (Kettle)element;
             return $"insert into {propertyMap.TableName} (" +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Id)).ColumnName}," +
-                $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Access)).ColumnName}," +
+                $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Id)).ColumnName}," +                
                 $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Cost)).ColumnName}," +
                 $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Name)).ColumnName}," +
                 $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Power)).ColumnName}) " +
-                $"values ('{kettle.Id}', '{Enum.GetName((DbAccessRigts)kettle.Access)}', {kettle.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
+                $"values ('{kettle.Id}', {kettle.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
                 $"'{kettle.Name}', '{kettle.Power}');";
         }
 
         public string CreateUpdateQuery(Element element, DbTableColumnsMap propertyMap)
         {
             var kettle = (Kettle)element;
-            return $"update {propertyMap.TableName} set " +                
-                $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Access)).ColumnName} = '{Enum.GetName((DbAccessRigts)kettle.Access)}'," +
+            return $"update {propertyMap.TableName} set " +                                
                 $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Cost)).ColumnName} = {kettle.Cost.ToString(CultureInfo.GetCultureInfo("en-US"))}," +
                 $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Name)).ColumnName} = '{kettle.Name}'," +
                 $"{propertyMap.GetPropertyNameInDb(nameof(Kettle.Power)).ColumnName} = '{kettle.Power}'" +

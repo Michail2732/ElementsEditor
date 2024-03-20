@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ElementsEditor
 {
-    internal interface IElementsEditorViewModel: INotifyPropertyChanged
+    public interface IElementsEditorViewModel: INotifyPropertyChanged
     {
         int CurrentPage { get;  set; }
         int PageSize { get; set; }
@@ -16,14 +16,12 @@ namespace ElementsEditor
         bool EnableRemoving { get; }
         long ItemsCount { get; }
         int PagesCount { get; }
-        bool IsBusy { get; }
-        bool ShowChanges { get; set; }
+        bool IsBusy { get; }        
 
         #region elements
         ObservableCollection<Element> Elements { get; }
         IEnumerable<ElementBuilder>? ElementBuilders { get; }
         IList SelectedElements { get; set; }
-        void AddNewElement(Element newElement);
         #endregion        
 
         #region filters
@@ -38,12 +36,12 @@ namespace ElementsEditor
         Command NextPageCommand { get; }
         Command PreviousPageCommand { get; }
         Command RefreshElementsCommand { get; }
-        Command RemoveSelectedElementsCommand { get; }
-        Command RestoreSelectedElementsCommand { get; }
+        Command RemoveSelectedElementsCommand { get; }        
         Command SaveChangesCommand { get; }
         Command ApplyFiltersCommand { get; }
         Command AddNewElementCommand { get; }
-        Command AddNewFilterCommand { get; }
+        Command AddNewFilterCommand { get; }        
+        Command ShowFiltersCommand { get; }
         Command DeleteAppliedFiltersCommand { get; }
         void UpdateCommandsCanExecute();
         #endregion

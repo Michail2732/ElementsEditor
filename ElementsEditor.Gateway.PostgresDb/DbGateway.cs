@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 
 namespace ElementsEditor.Gateway.PostgresDb
 {
+    // todo: реализовать отмену
     public class DbGateway<TElement> : IElementsGateway<TElement>
         where TElement: Element
     {
         private readonly string _connectionString;        
         private readonly DbFilterConverter _converter;
         private readonly DbTableColumnsMap _propertyMap;
-        private readonly DbElementMaps _productMapLocator;
+        private readonly DbElementMaps _dbElementsMapper;
 
         public DbGateway(string connectionString,
             DbTableColumnsMap propertyMap, 
@@ -23,7 +24,23 @@ namespace ElementsEditor.Gateway.PostgresDb
             _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
             _propertyMap = propertyMap ?? throw new ArgumentNullException(nameof(propertyMap));
             _converter = new DbFilterConverter(propertyMap);
-            _productMapLocator = productMapLocator ?? throw new ArgumentNullException(nameof(productMapLocator));
+            _dbElementsMapper = productMapLocator ?? throw new ArgumentNullException(nameof(productMapLocator));
+        }
+
+        public void Add(TElement element)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {
+                string query = _dbElementsMapper.GetMap(element).CreateInsertQuery(element, _propertyMap);
+                connection.Open();
+                var command = new NpgsqlCommand(query, connection);
+                command.ExecuteNonQuery();
+            }
+        }
+
+        public Task AddAsync(TElement element, CancellationToken ct)
+        {
+            return Task.Run(() => Add(element), ct);
         }
 
         public long GetCount(Query query)
@@ -54,7 +71,7 @@ namespace ElementsEditor.Gateway.PostgresDb
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    var product = _productMapLocator.GetMap(reader, _propertyMap)
+                    var product = _dbElementsMapper.GetMap(reader, _propertyMap)
                                                     .MapToModel(reader, _propertyMap);
                     result.Add((TElement)product);
                 }
@@ -67,19 +84,14 @@ namespace ElementsEditor.Gateway.PostgresDb
             return Task.Run(() => GetElements(query), ct);            
         }
 
-        public void SaveChanges(IReadOnlyList<TElement> changesElements)
+        public void Remove(IEnumerable<TElement> elements)
         {
             using (var connection = new NpgsqlConnection(_connectionString))
-            {                
+            {
                 StringBuilder sb = new StringBuilder();
-                foreach (var changeElement in changesElements)
-                {
-                    if (changeElement.State == ElementState.Modified)
-                        sb.Append("\n" + _productMapLocator.GetMap(changeElement).CreateUpdateQuery(changeElement, _propertyMap));
-                    else if (changeElement.State == ElementState.New)
-                        sb.Append("\n" + _productMapLocator.GetMap(changeElement).CreateInsertQuery(changeElement, _propertyMap));
-                    else if (changeElement.State == ElementState.Removed)
-                        sb.Append("\n" + $"delete from {_propertyMap.TableName} where {_propertyMap.GetPropertyNameInDb(nameof(Element.Id)).ColumnName} = '{changeElement.Id}';");
+                foreach (var element in elements)
+                {                    
+                    sb.Append("\n" + $"delete from {_propertyMap.TableName} where {_propertyMap.GetPropertyNameInDb(nameof(Element.Id)).ColumnName} = '{element.Id}';");
                 }
                 connection.Open();
                 var transaction = connection.BeginTransaction();
@@ -89,10 +101,32 @@ namespace ElementsEditor.Gateway.PostgresDb
             }
         }
 
-        public Task SaveChangesAsync(IReadOnlyList<TElement> changesElements, CancellationToken ct)
+        public Task RemoveAsync(IEnumerable<TElement> elements, CancellationToken ct)
+        {
+            return Task.Run(() => Remove(elements), ct);
+        }
+
+        public void SaveChanges(IEnumerable<TElement> changesElements)
+        {
+            using (var connection = new NpgsqlConnection(_connectionString))
+            {                
+                StringBuilder sb = new StringBuilder();
+                foreach (var changeElement in changesElements)
+                {                    
+                    sb.Append("\n" + _dbElementsMapper.GetMap(changeElement).CreateUpdateQuery(changeElement, _propertyMap));                 
+                }
+                connection.Open();
+                var transaction = connection.BeginTransaction();
+                var command = new NpgsqlCommand(sb.ToString(), connection);
+                command.ExecuteNonQuery();
+                transaction.Commit();
+            }
+        }        
+
+        public Task SaveChangesAsync(IEnumerable<TElement> changesElements, CancellationToken ct)
         {
             return new Task(() => SaveChanges(changesElements));
-        }
+        }        
 
         private string BuildDbQuery(string baseDbQuery, Query query, bool withPagination = true)
         {

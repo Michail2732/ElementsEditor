@@ -11,23 +11,12 @@
 	<DockPanel LastChildFill="True">
 		<DockPanel DockPanel.Dock="Top"
 				   LastChildFill="False"	
-				   Classes="editor_toolbar_panel">
-			<ToggleButton ToolTip.Tip="Show item change history"
-						  IsChecked="{Binding ShowChanges}"			
-						  IsEnabled="{Binding IsBusy, Converter={StaticResource bool_inverse_converter}}"
-						  Classes="position_first_left_horizontal editor_toolbar_button">
-				<PathIcon Data="{StaticResource editor_history}"></PathIcon>
-			</ToggleButton>
+				   Classes="editor_toolbar_panel">			
 			<Button Command="{Binding SaveChangesCommand}"
 					ToolTip.Tip="Save changes"					
 					Classes="editor_toolbar_button position_middle_horizontal">
 				<PathIcon Data="{StaticResource editor_save_changes}"></PathIcon>
-			</Button>
-			<Button ToolTip.Tip="Restore selected elements"
-					Classes="editor_toolbar_button position_middle_horizontal"										
-					Command="{Binding RestoreSelectedElementsCommand}">
-				<PathIcon Data="{StaticResource editor_restore}"></PathIcon>
-			</Button>
+			</Button>			
 			<Button ToolTip.Tip="Refresh items"
 					Command="{Binding RefreshElementsCommand}"										
 					Classes="editor_toolbar_button position_first_left_horizontal">
@@ -39,7 +28,7 @@
 					Command="{Binding AddNewElementCommand}">
 				<PathIcon Data="{StaticResource editor_addnew}"></PathIcon>
 			</Button>
-			<Button ToolTip.Tip="Mark selected items as remove"
+			<Button ToolTip.Tip="Remove selected items"
 					Command="{Binding RemoveSelectedElementsCommand}"
 					IsVisible="{Binding EnableRemoving}"															
 					Classes="editor_toolbar_button position_middle_horizontal">
@@ -155,7 +144,8 @@
 					</DataTemplate>
 				</ComboBox.ItemTemplate>
 			</ComboBox>
-			<Button x:Name="btn_show_filters_list"
+			<Button Command="{Binding ShowFiltersCommand}"
+					x:Name="btn_show_filters_list"
 					IsVisible="False"
 					Classes="editor_filterring_listmode_button position_first_left_horizontal">
 				<PathIcon Data="{StaticResource editor_filter_list}"/>

@@ -8,59 +8,29 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace ElementsEditor
-{
-    // todo: implement reset properties value after call ResetState
+{    
     public abstract class Element: INotifyPropertyChanged, IEquatable<Element?>
-    {        
-        private AccessRights _accessRights;
-        private ElementState _previousState;
-        private Element? _previousStateElement;
-
-        public Element(string id, AccessRights accessRights)
-        {
-            Id = id;
-            _accessRights = accessRights;            
-        }
-
-        internal IElementsStateWatcher? StateWatcher { get; set; }        
-        
+    {
         public string Id { get; }
 
-        public AccessRights Access => _accessRights;
-        public bool CanModify => _accessRights.HasFlag(AccessRights.Write);
 
-
-        private ElementState _state;
-        public ElementState State
+        private bool _isModified;
+        public bool IsModified
         {
-            get => _state;
-            internal set
-            {
-                if (value >= _state)
-                {                    
-                    _previousState = _state;
-                    _state = value;
-                    _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(State)));
-                    StateWatcher?.OnChangeState(this);
-                }                    
-            } 
+            get => _isModified;
+            internal set => SetAndRaisePropertyChanged(ref _isModified, value);
         }
 
-        internal void ResetState()
-        {            
-            _state = _previousState;            
-            _previousState = ElementState.None;
-            _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(State)));            
-        }
 
-        protected virtual Element Clone()
+        public Element(string id)
         {
-            return (Element)MemberwiseClone();
-        }
+            Id = id;            
+        }                           
+                
 
         #region INotifyPropertyChanged impl
         private event PropertyChangedEventHandler? _propertyChanged;        
-        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
+        public event PropertyChangedEventHandler? PropertyChanged
         {
             add { _propertyChanged = (PropertyChangedEventHandler?)Delegate.Combine(_propertyChanged, value); }
             remove { _propertyChanged = (PropertyChangedEventHandler?)Delegate.Remove(_propertyChanged, value); }
@@ -71,11 +41,8 @@ namespace ElementsEditor
             [CallerMemberName] string property = "")
         {
             if (oldValue?.Equals(newValue) == true)
-                return;
-            if (_state == ElementState.None)
-                _previousStateElement = Clone();
-            oldValue = newValue;
-            State = ElementState.Modified;
+                return;            
+            oldValue = newValue;            
             _propertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));            
         }        
         #endregion implement INotifyPropertyChanged
@@ -95,7 +62,7 @@ namespace ElementsEditor
         public override int GetHashCode()
         {
             return 2108858624 + EqualityComparer<string>.Default.GetHashCode(Id);
-        }        
-        #endregion
-    }    
+        }
+        #endregion        
+    }
 }

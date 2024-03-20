@@ -45,7 +45,7 @@ namespace ElementsEditor.Sample.Models
 
         public override Element Build()
         {
-            return new Fridge(Guid.NewGuid().ToString(), AccessRights.All, Cost, ProductName, _temperature);
+            return new Fridge(Guid.NewGuid().ToString(), Cost, ProductName, _temperature);
         }
 
         public override void ResetProperties()
@@ -72,7 +72,7 @@ namespace ElementsEditor.Sample.Models
 
         public override Element Build()
         {
-            return new Kettle(Guid.NewGuid().ToString(), AccessRights.All, Cost, ProductName, _power);
+            return new Kettle(Guid.NewGuid().ToString(), Cost, ProductName, _power);
         }
 
         public override void ResetProperties()
@@ -98,7 +98,7 @@ namespace ElementsEditor.Sample.Models
 
         public override Element Build()
         {
-            return new DeskLamp(Guid.NewGuid().ToString(), AccessRights.All, Cost, ProductName, _lumen);
+            return new DeskLamp(Guid.NewGuid().ToString(), Cost, ProductName, _lumen);
         }
 
         public override void ResetProperties()
