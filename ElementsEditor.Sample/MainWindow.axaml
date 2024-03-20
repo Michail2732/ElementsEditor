@@ -50,9 +50,7 @@
 				</DataTemplate>
 				<DataTemplate DataType="{x:Type models:Fridge}">					
 					<StackPanel Orientation="Horizontal">
-						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
-								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
-								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"
+						<PathIcon Classes.IsElementEdited="{Binding IsModified}"
 								  Classes="position_middle_horizontal">
 						</PathIcon>
 						<PathIcon Data="{StaticResource fridge_icon}"
@@ -74,9 +72,7 @@
 				</DataTemplate>
 				<DataTemplate DataType="{x:Type models:DeskLamp}">
 					<StackPanel Orientation="Horizontal">
-						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
-								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
-								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"
+						<PathIcon Classes.IsElementEdited="{Binding IsModified}"								  
 								  Classes="position_middle_horizontal">
 						</PathIcon>
 						<PathIcon Data="{StaticResource desklamp_icon}"
@@ -98,9 +94,7 @@
 				</DataTemplate>
 				<DataTemplate DataType="{x:Type models:Kettle}">
 					<StackPanel Orientation="Horizontal">
-						<PathIcon Classes.IsElementEdited="{Binding State, Converter={StaticResource HasElementModifyStateConverter}}"
-								  Classes.IsElementDeleted="{Binding State, Converter={StaticResource HasElementDeleteStateConverter}}"
-								  Classes.IsElementAdded="{Binding State, Converter={StaticResource HasElementNewStateConverter}}"
+						<PathIcon Classes.IsElementEdited="{Binding IsModified}"
 								  Classes="position_middle_horizontal">							
 						</PathIcon>
 						<PathIcon Data="{StaticResource kettle_icon}"

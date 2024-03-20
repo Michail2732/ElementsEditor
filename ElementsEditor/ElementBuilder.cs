@@ -16,7 +16,19 @@ namespace ElementsEditor
         }
 
         public abstract Element Build();
-		public abstract void ResetProperties();		
+		public abstract void ResetProperties();
+
+
+		private bool _canBuild;
+		public bool CanBuild
+		{
+			get => _canBuild;
+			set
+			{
+				_canBuild = value;
+				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanBuild)));				
+			}
+		}		
 
 		#region INotifyPropertyChanged impl
 		public event PropertyChangedEventHandler? PropertyChanged;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Avalonia.Controls;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,14 +11,15 @@ using System.Threading;
 
 namespace ElementsEditor
 {   
-	public class ElementsEditorViewModel<TElement> : IElementsStateWatcher, IElementsEditorViewModel
+	public class ElementsEditorViewModel<TElement> : IElementsEditorViewModel
         where TElement : Element
 	{
         private const int _defaultCurrentPage = 1;
+        
+        private readonly IElementsGateway<TElement> _itemsGateway;
 
-        private readonly IElementsGateway<TElement> _itemsGateway;        
-        private CancellationTokenSource? _extractCts;
-        private readonly ElementsCollectionGateway<TElement> _changedItemsGateway;
+        private readonly List<TElement> _changedItems;
+        private CancellationTokenSource? _extractCts;        
 
 
         private int _currentPage = _defaultCurrentPage;
@@ -86,19 +88,7 @@ namespace ElementsEditor
         {
             get { return _isBusy; }
             private set { SetAndRaisePropertyChanged(ref _isBusy, value); }
-        }        
-
-        private bool _showChanges;
-        public bool ShowChanges
-        {
-            get { return _showChanges; }
-            set 
-            {
-                SetAndRaisePropertyChanged(ref _showChanges, value, out bool isChanged);
-                if (isChanged)
-                    InvalidateElements();
-            }
-        }
+        }                
 
         public ObservableCollection<IPropertyFilterModel> Filters { get; }
         public IEnumerable<PropertyFilterDescriptor>? FilterDescriptors { get; }
@@ -155,11 +145,11 @@ namespace ElementsEditor
         public Command PreviousPageCommand { get; }
         public Command RefreshElementsCommand { get; }                
         public Command RemoveSelectedElementsCommand { get; }
-        public Command RestoreSelectedElementsCommand { get; }
         public Command SaveChangesCommand { get; }                
         public Command ApplyFiltersCommand { get; }
         public Command AddNewElementCommand { get; }
         public Command AddNewFilterCommand { get; }
+        public Command ShowFiltersCommand { get; }
         public Command DeleteAppliedFiltersCommand { get; }
 
         public ElementsEditorViewModel(
@@ -183,7 +173,7 @@ namespace ElementsEditor
             _enableAsync = enableAsync;
             _enableRemoving = enableRemoving;
             
-            _changedItemsGateway = new ElementsCollectionGateway<TElement>(Array.Empty<TElement>());
+            _changedItems = new List<TElement>();
             NextPageCommand = new Command(
                     param => CurrentPage++,
                     param => !IsBusy && EnablePagination && ItemsCount > (CurrentPage * PageSize));
@@ -193,17 +183,17 @@ namespace ElementsEditor
             RefreshElementsCommand = new Command(
                 param => InvalidateElements(),
                 param => !IsBusy);
+            ShowFiltersCommand = new Command(ShowFiltersCommandHandler,
+                param => !IsBusy);
             RemoveSelectedElementsCommand = new Command(RemoveCommandHandler,
-                param => !IsBusy && !ShowChanges && SelectedElements?.Count > 0);
-            RestoreSelectedElementsCommand = new Command(RestoreCommandHandler,
-                param => !IsBusy && ShowChanges && SelectedElements?.Count > 0);
+                param => !IsBusy && SelectedElements?.Count > 0);            
             SaveChangesCommand = new Command(SaveCommandHandler,
-                param => !IsBusy && ShowChanges && _changedItemsGateway.Elements.Count > 0);
+                param => !IsBusy && _changedItems.Count > 0);
             ApplyFiltersCommand = new Command(ApplyFiltersCommandHandler,
                 param => !IsBusy && Filters.Count > 0);
             AddNewFilterCommand = new Command(AddNewFilterCommandHandler,
                 param => !IsBusy && SelectedFilterDescriptor != null);
-            AddNewElementCommand = new Command((s) => { },
+            AddNewElementCommand = new Command(AddNewElementCommandHandler,
                 param => !IsBusy && ElementBuilders != null);
             DeleteAppliedFiltersCommand = new Command(DeleteAppliedFiltersCommandHandler,
                 param => !IsBusy);
@@ -215,8 +205,7 @@ namespace ElementsEditor
             NextPageCommand.OnCanExecuteChanged();
             PreviousPageCommand.OnCanExecuteChanged();
             RefreshElementsCommand.OnCanExecuteChanged();
-            RemoveSelectedElementsCommand.OnCanExecuteChanged();
-            RestoreSelectedElementsCommand.OnCanExecuteChanged();
+            RemoveSelectedElementsCommand.OnCanExecuteChanged();            
             SaveChangesCommand.OnCanExecuteChanged();
             ApplyFiltersCommand.OnCanExecuteChanged();
             AddNewElementCommand.OnCanExecuteChanged();
@@ -236,7 +225,7 @@ namespace ElementsEditor
         }
 
         private void AddNewFilterCommandHandler(object? param)
-        {
+        {            
             Filters.Add(SelectedFilterDescriptor!.CreateFilterModel(Filters.Count == 0));
             UpdateCommandsCanExecute();
         }
@@ -249,27 +238,32 @@ namespace ElementsEditor
             CurrentPage = _defaultCurrentPage;
             _isBusy = false;
             InvalidateElements();
+        }      
+        
+        private async void ShowFiltersCommandHandler(object? param)
+        {
+            await this.ShowFiltersListDialog();
         }
 
-        private void RestoreCommandHandler(object? param)
-        {
-            foreach (TElement selectedItem in SelectedElements!)
+        private async void RemoveCommandHandler(object? param)
+        {            
+            try
             {
-                selectedItem.ResetState();
-                _changedItemsGateway.Elements.Remove(selectedItem);
+                IsBusy = true;
+                _extractCts = new CancellationTokenSource();
+                if (!_enableAsync)
+                    _itemsGateway.Remove((IEnumerable<TElement>)SelectedElements);
+                else
+                    await _itemsGateway.RemoveAsync((IEnumerable<TElement>)SelectedElements, _extractCts.Token);
+                InvalidateElements();
             }
-            InvalidateElements();
-        }
-
-        private void RemoveCommandHandler(object? param)
-        {
-            foreach (TElement selectedItem in SelectedElements!)
+            catch (OperationCanceledException) { }
+            catch (Exception e) { throw; }
+            finally
             {
-                selectedItem.State = ElementState.Removed;
-                if (!_changedItemsGateway.Elements.Contains(selectedItem))
-                    _changedItemsGateway.Elements.Add(selectedItem);
-            }
-            InvalidateElements();
+                IsBusy = false;
+                UpdateCommandsCanExecute();
+            }                                            
         }        
 
         private async void SaveCommandHandler(object? param)
@@ -279,15 +273,10 @@ namespace ElementsEditor
                 _extractCts = new CancellationTokenSource();
                 IsBusy = true;
                 if (EnableAsync)
-                    await _itemsGateway.SaveChangesAsync(
-                        _changedItemsGateway.Elements,
-                        _extractCts.Token);
+                    await _itemsGateway.SaveChangesAsync(_changedItems, _extractCts.Token);
                 else
-                    _itemsGateway.SaveChanges(
-                        _changedItemsGateway.Elements);
-                foreach (var element in _changedItemsGateway.Elements)                
-                    element.ResetState();                
-                _changedItemsGateway.Elements.Clear();
+                    _itemsGateway.SaveChanges(_changedItems);                
+                _changedItems.Clear();
             }
             catch (OperationCanceledException) { }
             catch (Exception e) { throw; }
@@ -300,20 +289,39 @@ namespace ElementsEditor
         }
         #endregion
 
-        public void AddNewElement(Element? newElement)
+        public async void AddNewElementCommandHandler(object? param)
         {
-            if (newElement as TElement != null)
-            {
-                var castedNewElement = (TElement)newElement;
-                castedNewElement.State = ElementState.New;
-                _changedItemsGateway.Elements.Add(castedNewElement);
+            var newElement = await this.ShowAddNewElementDialog(); 
+            if (newElement == null)
+                return;
+            try
+            {                
+                _extractCts = new CancellationTokenSource();
+                IsBusy = true;
+                if (_enableAsync)
+                    await _itemsGateway.AddAsync((TElement)newElement!, _extractCts.Token);
+                else
+                    _itemsGateway.Add((TElement)newElement!);
             }
+            catch (OperationCanceledException) { }
+            catch (Exception e) { throw; }
+            finally
+            {
+                IsBusy = false;
+                UpdateCommandsCanExecute();
+            }            
         }
 
         private async void InvalidateElements()
         {
             if (IsBusy || _itemsGateway is null)
                 return;
+            if (_changedItems.Count > 0)
+            {
+                var isContinue = await this.ShowHaveEditElementsDialog();
+                if (!isContinue)
+                    return;
+            }
             try
             {                
                 _extractCts = new CancellationTokenSource();
@@ -323,31 +331,31 @@ namespace ElementsEditor
                 var elementsQuery = new Query(
                         _enablePaggination ? _pageSize * (_currentPage - _defaultCurrentPage) : null,
                         _enablePaggination ? _pageSize : null,
-                        !_showChanges ? _changedItemsGateway.Elements.Select(a => a.Id).ToList().NullIfEmpty()
-                                      : null,
+                        null,
                         _appliedFilters
-                    );
-
-                var itemsGateway = _showChanges ? _changedItemsGateway : _itemsGateway;
+                    );                
 
                 var newElements = _enableAsync
-                        ? await itemsGateway.GetElementsAsync(elementsQuery, _extractCts.Token)
-                        : itemsGateway.GetElements(elementsQuery);
+                        ? await _itemsGateway.GetElementsAsync(elementsQuery, _extractCts.Token)
+                        : _itemsGateway.GetElements(elementsQuery);
 
                 ItemsCount = _enableAsync
-                        ? await itemsGateway.GetCountAsync(elementsQuery, _extractCts.Token)
-                        : itemsGateway.GetCount(elementsQuery);
+                        ? await _itemsGateway.GetCountAsync(elementsQuery, _extractCts.Token)
+                        : _itemsGateway.GetCount(elementsQuery);
 
                 if (_enablePaggination)
                     PagesCount = _pageSize != 0
                         ? (int)(_itemsCount / _pageSize) + (_itemsCount % _pageSize == 0 ? 0 : 1)
                         : 0;
-
-                Elements.Clear();
+                
+                foreach (var element in Elements)
+                    element.PropertyChanged -= OnElementPropertyChanged;
+                
+                Elements.Clear();                
                 for (int i = 0; i < newElements.Length; i++)
-                {
-                    newElements[i].StateWatcher = this;
+                {                    
                     Elements.Add(newElements[i]);
+                    newElements[i].PropertyChanged += OnElementPropertyChanged;
                 }
             }
             catch (OperationCanceledException) { }
@@ -359,11 +367,15 @@ namespace ElementsEditor
             }
         }
 
-        void IElementsStateWatcher.OnChangeState(Element element)
+
+        public void OnElementPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (!_changedItemsGateway.Elements.Contains(element)
-                && element.State != ElementState.None)
-                _changedItemsGateway.Elements.Add((TElement)element);
+            TElement element = (TElement)sender;
+            if (!_changedItems.Contains(element))
+            {
+                _changedItems.Add(element);
+                element.IsModified = true;
+            }                
         }
 
 

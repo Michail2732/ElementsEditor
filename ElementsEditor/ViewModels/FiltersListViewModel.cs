@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ElementsEditor
 {   
-	public class FiltersListViewModel : INotifyPropertyChanged
+	public class FiltersListViewModel : DialogViewModel
 	{
 
 		public Command AddNewFilterCommand { get; }
@@ -30,8 +30,10 @@ namespace ElementsEditor
 		public ObservableCollection<IPropertyFilterModel> Filters { get; }
 		public List<IPropertyFilterModel> SelectedFilters { get; }
 
-        public FiltersListViewModel(IEnumerable<PropertyFilterDescriptor> filterDescriptors,
+        public FiltersListViewModel(
+			IEnumerable<PropertyFilterDescriptor> filterDescriptors,
             ObservableCollection<IPropertyFilterModel> filters)
+			: base(false)
         {
 			SelectedFilters = new List<IPropertyFilterModel>();
             FilterDescriptors = filterDescriptors ?? throw new ArgumentNullException(nameof(filterDescriptors));
@@ -58,20 +60,7 @@ namespace ElementsEditor
 			AddNewFilterCommand.OnCanExecuteChanged();
 			DeleteSelectdFilters.OnCanExecuteChanged();
 		}
-
-
-
-        #region INotifyPropertyChanged impl
-        public event PropertyChangedEventHandler? PropertyChanged;
-		protected void SetAndRaisePropertyChanged<T>(ref T oldValue, T newValue,
-			[CallerMemberName] string property = "")
-		{
-			if (oldValue?.Equals(newValue) == true)
-				return;
-			oldValue = newValue;
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-		}
-		#endregion
+     
 	}
 
 }

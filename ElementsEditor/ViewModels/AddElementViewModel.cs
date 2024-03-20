@@ -7,7 +7,7 @@ using System.Text;
 namespace ElementsEditor
 {    
 
-	public class AddElementViewModel : INotifyPropertyChanged
+	public class AddElementViewModel : DialogViewModel
 	{
         public IEnumerable<ElementBuilder> ElementBuilders { get; }
 
@@ -24,22 +24,16 @@ namespace ElementsEditor
             }
 		}		
 
-        public AddElementViewModel(IEnumerable<ElementBuilder> elementBuilders)
+        public AddElementViewModel(IEnumerable<ElementBuilder> elementBuilders): base(true)
         {
             ElementBuilders = elementBuilders ?? throw new ArgumentNullException(nameof(elementBuilders));
-        }		
+        }
 
-		#region INotifyPropertyChanged impl
-		public event PropertyChangedEventHandler? PropertyChanged;
-		protected void SetAndRaisePropertyChanged<T>(ref T oldValue, T newValue,
-			[CallerMemberName] string property = "")
-		{
-			if (oldValue?.Equals(newValue) == true)
-				return;
-			oldValue = newValue;
-			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-		}
-		#endregion
-	}
+        protected override void ApplyCommandHandler(object? param)
+        {
+            
+        }
+
+    }
 
 }

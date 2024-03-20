@@ -2,7 +2,7 @@ using Avalonia.Controls;
 
 namespace ElementsEditor
 {
-    public partial class FiltersListView : UserControl, IModalView
+    public partial class FiltersListView : UserControl
     {
         public FiltersListView(FiltersListViewModel viewModel)
         {
@@ -12,16 +12,6 @@ namespace ElementsEditor
             {
                 viewModel.UpdateCanExecuteChanged();
             };
-        }
-
-        public void OnApplying(ModalViewContext context)
-        {
-            
-        }
-
-        public void OnCanceling(ModalViewContext context)
-        {
-            
-        }
+        }        
     }
 }

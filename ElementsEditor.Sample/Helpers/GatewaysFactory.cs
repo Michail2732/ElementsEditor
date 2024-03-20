@@ -31,11 +31,11 @@ namespace ElementsEditor.Sample.Helpers
             for (int i = 0; i < count; i++)
             {                
                 if (i % 3 == 0)
-                    products.Add(new DeskLamp(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Electros sa-{i}", i + 259 / 2));
+                    products.Add(new DeskLamp(Guid.NewGuid().ToString(), (Decimal)1.24 * i, $"Electros sa-{i}", i + 259 / 2));
                 else if (i % 2 == 0)
-                    products.Add(new Fridge(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Indesit LX-{i}", -(i % 100 + 13)));
+                    products.Add(new Fridge(Guid.NewGuid().ToString(), (Decimal)1.24 * i, $"Indesit LX-{i}", -(i % 100 + 13)));
                 else
-                    products.Add(new Kettle(Guid.NewGuid().ToString(), AccessRights.All, (Decimal)1.24 * i, $"Pollaris-{i}", 1800 - i % 100));
+                    products.Add(new Kettle(Guid.NewGuid().ToString(), (Decimal)1.24 * i, $"Pollaris-{i}", 1800 - i % 100));
             }
             return new ElementsCollectionGateway<Product>(products)
             { DebugDelay = 600 };

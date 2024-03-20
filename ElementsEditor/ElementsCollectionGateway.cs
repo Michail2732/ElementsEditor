@@ -64,18 +64,12 @@ namespace ElementsEditor
             return GetElements(query);
         }
 
-        public void SaveChanges(IReadOnlyList<TElement> changesElements)
+        public void SaveChanges(IEnumerable<TElement> changesElements)
         {
-            foreach (TElement element in changesElements)
-            {
-                if (element.State == ElementState.Removed)
-                    _elements.Remove(element);
-                else if (element.State == ElementState.New)
-                    _elements.Add(element);
-            }
+            
         }
 
-        public async Task SaveChangesAsync(IReadOnlyList<TElement> changesElements, CancellationToken ct)
+        public async Task SaveChangesAsync(IEnumerable<TElement> changesElements, CancellationToken ct)
         {
             await Task.Delay(DebugDelay);
             SaveChanges(changesElements);
@@ -85,5 +79,30 @@ namespace ElementsEditor
         {
             return _filterConverter.Convert(filters);
         }
+
+        public void Remove(IEnumerable<TElement> elements)
+        {
+            foreach (var element in elements)
+            {
+                _elements.Remove(element);
+            }
+        }
+
+        public async Task RemoveAsync(IEnumerable<TElement> elements, CancellationToken ct)
+        {
+            await Task.Delay(DebugDelay);
+            Remove(elements);
+        }
+
+        public void Add(TElement element)
+        {
+            _elements.Add(element);
+        }
+
+        public async Task AddAsync(TElement element, CancellationToken ct)
+        {
+            await Task.Delay(DebugDelay);
+            Add(element);
+        }        
     }
 }

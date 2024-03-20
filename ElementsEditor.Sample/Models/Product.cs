@@ -11,7 +11,7 @@ namespace ElementsEditor.Sample.Models
 {
     public class Product : Element
     {
-        public Product(string id, AccessRights accessRights, decimal cost, string name) : base(id, accessRights)
+        public Product(string id, decimal cost, string name) : base(id)
         {
             _cost = cost;
             _name = name;
@@ -35,7 +35,7 @@ namespace ElementsEditor.Sample.Models
 
     public sealed class Fridge : Product
     {
-        public Fridge(string id, AccessRights accessRights, decimal cost, string name, int temperature) : base(id, accessRights, cost, name)
+        public Fridge(string id, decimal cost, string name, int temperature) : base(id,  cost, name)
         {
             _temperature = temperature;
         }
@@ -50,7 +50,7 @@ namespace ElementsEditor.Sample.Models
 
     public sealed class DeskLamp : Product
     {
-        public DeskLamp(string id, AccessRights accessRights, decimal cost, string name, int lumen) : base(id, accessRights, cost, name)
+        public DeskLamp(string id, decimal cost, string name, int lumen) : base(id, cost, name)
         {
             _lumen = lumen;
         }
@@ -66,7 +66,7 @@ namespace ElementsEditor.Sample.Models
 
     public sealed class Kettle : Product
     {
-        public Kettle(string id, AccessRights accessRights, decimal cost, string name, int power) : base(id, accessRights, cost, name)
+        public Kettle(string id, decimal cost, string name, int power) : base(id, cost, name)
         {
             _power = power;
         }

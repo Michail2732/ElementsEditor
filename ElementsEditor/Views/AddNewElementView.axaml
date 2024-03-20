@@ -4,7 +4,7 @@
 			 xmlns:local="clr-namespace:ElementsEditor;assembly=ElementsEditor"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="ElementsEditor.AddNewElementView">
+             x:Class="ElementsEditor.AddNewElementView">	
 	<DockPanel Margin="10">
 		<ComboBox DockPanel.Dock="Top"
 				  ItemsSource="{Binding ElementBuilders}"
