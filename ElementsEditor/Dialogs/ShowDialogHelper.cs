@@ -24,6 +24,7 @@ namespace ElementsEditor
 
             var addElementsVM = new AddElementViewModel(viewModel.ElementBuilders!);
             modalWindow.View = new AddNewElementView(addElementsVM);
+            modalWindow.DataContext = addElementsVM;
             var parentWindow = (Window)TopLevel.GetTopLevel(editorsView)!;
             await modalWindow.ShowDialog(parentWindow);                        
             if (addElementsVM.Result == Result.Ok)
@@ -37,9 +38,11 @@ namespace ElementsEditor
             var modalWindow = new ModalWIndow();
             modalWindow.DataTemplates.AddRange(editorsView.DataTemplates);
 
-            modalWindow.View = new FiltersListView(new FiltersListViewModel(
+            var filtersVm = new FiltersListViewModel(
                 viewModel.FilterDescriptors!,
-                viewModel.Filters));
+                viewModel.Filters);
+            modalWindow.View = new FiltersListView(filtersVm);
+            modalWindow.DataContext = filtersVm;
             var parentWindow = (Window)TopLevel.GetTopLevel(editorsView)!;
             await modalWindow.ShowDialog(parentWindow);
         }
@@ -52,6 +55,7 @@ namespace ElementsEditor
 
             var warningVm = new WarningViewModel($"Имеются несохранённые изменения, продолжить ?");
             modalWindow.View = new WarningView(warningVm);
+            modalWindow.DataContext = warningVm;
             var parentWindow = (Window)TopLevel.GetTopLevel(editorsView)!;
             await modalWindow.ShowDialog(parentWindow);
             return warningVm.Result == Result.Ok;

@@ -18,22 +18,31 @@ namespace ElementsEditor
 			get => _elementBuilder;
 			set
 			{
-				if (value != null)
+                if (_elementBuilder != null)
+                    _elementBuilder.PropertyChanged -= ElementBuilderPropertyChanged;
+                if (value != null)
 					value.ResetProperties();
                 SetAndRaisePropertyChanged(ref _elementBuilder, value);
+                if (_elementBuilder != null)
+                    _elementBuilder.PropertyChanged += ElementBuilderPropertyChanged;
             }
 		}		
 
         public AddElementViewModel(IEnumerable<ElementBuilder> elementBuilders): base(true)
         {
             ElementBuilders = elementBuilders ?? throw new ArgumentNullException(nameof(elementBuilders));
-        }
+        }        
 
-        protected override void ApplyCommandHandler(object? param)
+        protected override bool CanApplyCommandHandler(object? param)
         {
-            
+            return _elementBuilder?.CanBuild ?? false;
         }
 
+        private void ElementBuilderPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ElementBuilder.CanBuild))
+                UpdateCanExecuteCommands();
+        }
     }
 
 }

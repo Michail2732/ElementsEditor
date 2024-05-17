@@ -18,7 +18,11 @@ namespace ElementsEditor.Sample.Models
         public string ProductName
         {
             get => _productName;
-            set => SetAndRaisePropertyChanged(ref _productName, value);
+            set
+            {
+                SetAndRaisePropertyChanged(ref _productName, value);
+                UpdateCanBuild();
+            }
         }
 
 
@@ -27,6 +31,11 @@ namespace ElementsEditor.Sample.Models
         {
             get => _cost;
             set => SetAndRaisePropertyChanged(ref _cost, value);
+        }
+
+        private void UpdateCanBuild()
+        {
+            CanBuild = !string.IsNullOrEmpty(ProductName);
         }
     }
 
@@ -54,6 +63,8 @@ namespace ElementsEditor.Sample.Models
             ProductName = string.Empty;
             Temperature = default;
         }
+
+
     }
 
 

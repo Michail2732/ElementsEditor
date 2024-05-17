@@ -8,12 +8,14 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace ElementsEditor
 {   
 	public class ElementsEditorViewModel<TElement> : IElementsEditorViewModel
         where TElement : Element
-	{
+    {        
+
         private const int _defaultCurrentPage = 1;
         
         private readonly IElementsGateway<TElement> _itemsGateway;
@@ -26,26 +28,34 @@ namespace ElementsEditor
         public int CurrentPage
         {
             get { return _currentPage; }
-            set 
-            {             
-                SetAndRaisePropertyChanged(ref _currentPage, value, out bool isChanged);
-                if (isChanged)
-                    InvalidateElements();                    
-            }
+            set { CurrentPageSet(value); }
+        }
+
+        private async void CurrentPageSet(int value)
+        {
+            if (!(await CanContinueOperation()))
+                return;
+            SetAndRaisePropertyChanged(ref _currentPage, value, out bool isChanged, nameof(CurrentPage));
+            if (isChanged)            
+                InvalidateElements();            
         }
 
         private int _pageSize;
         public int PageSize
         {
             get { return _pageSize; }
-            set 
-            {
-                SetAndRaisePropertyChanged(ref _pageSize, value);
-                if (CurrentPage == _defaultCurrentPage)
-                    InvalidateElements();
-                else 
-                    CurrentPage = _defaultCurrentPage;                
-            }
+            set { PageSizeSet(value); }
+        }
+
+        private async void PageSizeSet(int value)
+        {
+            if (!(await CanContinueOperation()))
+                return;
+            SetAndRaisePropertyChanged(ref _pageSize, value, nameof(PageSize));
+            if (CurrentPage == _defaultCurrentPage)            
+                InvalidateElements();            
+            else            
+                CurrentPage = _defaultCurrentPage;
         }
 
         private bool _enablePaggination;
@@ -128,7 +138,7 @@ namespace ElementsEditor
         public ObservableCollection<Element> Elements { get; }        
         public IEnumerable<ElementBuilder>? ElementBuilders { get; }        
 
-        private IList _selectedElements = new List<Element>();
+        private IList _selectedElements = new List<TElement>();
         public IList SelectedElements
         {
             get => _selectedElements;
@@ -151,6 +161,7 @@ namespace ElementsEditor
         public Command AddNewFilterCommand { get; }
         public Command ShowFiltersCommand { get; }
         public Command DeleteAppliedFiltersCommand { get; }
+        public Command DeleteFilterCommand { get; }
 
         public ElementsEditorViewModel(
 			IElementsGateway<TElement> itemsGateway,
@@ -175,10 +186,10 @@ namespace ElementsEditor
             
             _changedItems = new List<TElement>();
             NextPageCommand = new Command(
-                    param => CurrentPage++,
-                    param => !IsBusy && EnablePagination && ItemsCount > (CurrentPage * PageSize));
+                NextPageCommandHandler,
+                param => !IsBusy && EnablePagination && ItemsCount > (CurrentPage * PageSize));
             PreviousPageCommand = new Command(
-                param => CurrentPage--,
+                PreviousPageCommandHandler,
                 param => !IsBusy && EnablePagination && CurrentPage > 1);
             RefreshElementsCommand = new Command(
                 param => InvalidateElements(),
@@ -195,6 +206,7 @@ namespace ElementsEditor
                 param => !IsBusy && SelectedFilterDescriptor != null);
             AddNewElementCommand = new Command(AddNewElementCommandHandler,
                 param => !IsBusy && ElementBuilders != null);
+            DeleteFilterCommand = new Command(DeleteFilterCommandHandler);
             DeleteAppliedFiltersCommand = new Command(DeleteAppliedFiltersCommandHandler,
                 param => !IsBusy);
             InvalidateElements();
@@ -214,14 +226,34 @@ namespace ElementsEditor
         }
 
         #region Command Handlers
-        private void DeleteAppliedFiltersCommandHandler(object? param)
+
+        private void NextPageCommandHandler(object? param)
+        {            
+            CurrentPage++;
+        }
+
+        private void PreviousPageCommandHandler(object? param)
+        {            
+            CurrentPage--;
+        }
+
+        private async void DeleteAppliedFiltersCommandHandler(object? param)
         {
             if (_appliedFilters != null)
             {
+                if (!(await CanContinueOperation()))
+                    return;
                 _appliedFilters = null;
                 AppliedFiltersInfo = null;
-                InvalidateElements();
+                InvalidateElements();                
             }            
+        }
+
+        private void DeleteFilterCommandHandler(object? param)
+        {
+            if (param == null || !(param is IPropertyFilterModel filter))
+                return;
+            Filters.Remove(filter);
         }
 
         private void AddNewFilterCommandHandler(object? param)
@@ -230,14 +262,16 @@ namespace ElementsEditor
             UpdateCommandsCanExecute();
         }
 
-        private void ApplyFiltersCommandHandler(object? param)
+        private async void ApplyFiltersCommandHandler(object? param)
         {
+            if (!(await CanContinueOperation()))
+                return;
             AppliedFiltersInfo = string.Join("\n", Filters.Select(a => $"{a.PropertyName} {a.SelectedOperation} {a.GetValue()}"));
             _appliedFilters = new List<IPropertyFilter>(Filters.Select(a => a.ToPropertyFilter()));
             _isBusy = true;
             CurrentPage = _defaultCurrentPage;
-            _isBusy = false;
-            InvalidateElements();
+            _isBusy = false;            
+            InvalidateElements();            
         }      
         
         private async void ShowFiltersCommandHandler(object? param)
@@ -246,7 +280,8 @@ namespace ElementsEditor
         }
 
         private async void RemoveCommandHandler(object? param)
-        {            
+        {
+            bool isSuccess = false;
             try
             {
                 IsBusy = true;
@@ -255,15 +290,17 @@ namespace ElementsEditor
                     _itemsGateway.Remove((IEnumerable<TElement>)SelectedElements);
                 else
                     await _itemsGateway.RemoveAsync((IEnumerable<TElement>)SelectedElements, _extractCts.Token);
-                InvalidateElements();
+                isSuccess = true;
             }
             catch (OperationCanceledException) { }
             catch (Exception e) { throw; }
             finally
             {
                 IsBusy = false;
-                UpdateCommandsCanExecute();
-            }                                            
+                UpdateCommandsCanExecute();                
+            }                    
+            if (isSuccess)
+                InvalidateElements();
         }        
 
         private async void SaveCommandHandler(object? param)
@@ -275,8 +312,9 @@ namespace ElementsEditor
                 if (EnableAsync)
                     await _itemsGateway.SaveChangesAsync(_changedItems, _extractCts.Token);
                 else
-                    _itemsGateway.SaveChanges(_changedItems);                
-                _changedItems.Clear();
+                    _itemsGateway.SaveChanges(_changedItems);
+                _changedItems.ForEach(a => a.IsModified = false);
+                _changedItems.Clear();                
             }
             catch (OperationCanceledException) { }
             catch (Exception e) { throw; }
@@ -313,15 +351,11 @@ namespace ElementsEditor
         }
 
         private async void InvalidateElements()
-        {
+        {            
             if (IsBusy || _itemsGateway is null)
                 return;
-            if (_changedItems.Count > 0)
-            {
-                var isContinue = await this.ShowHaveEditElementsDialog();
-                if (!isContinue)
-                    return;
-            }
+            if (!(await CanContinueOperation()))
+                return;
             try
             {                
                 _extractCts = new CancellationTokenSource();
@@ -367,14 +401,30 @@ namespace ElementsEditor
             }
         }
 
+        private async Task<bool> CanContinueOperation()
+        {
+            if (_changedItems.Count > 0)
+            {
+                var isContinue = await this.ShowHaveEditElementsDialog();
+                if (!isContinue)
+                {                    
+                    return false;
+                }
+                _changedItems.ForEach(a => a.IsModified = false);
+                _changedItems.Clear();                
+            }
+            return true;
+        }
+
 
         public void OnElementPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            TElement element = (TElement)sender;
+            TElement element = (TElement)sender!;
             if (!_changedItems.Contains(element))
             {
                 _changedItems.Add(element);
                 element.IsModified = true;
+                UpdateCommandsCanExecute();
             }                
         }
 

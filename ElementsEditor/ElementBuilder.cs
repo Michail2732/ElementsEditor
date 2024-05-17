@@ -23,7 +23,7 @@ namespace ElementsEditor
 		public bool CanBuild
 		{
 			get => _canBuild;
-			set
+			protected set
 			{
 				_canBuild = value;
 				PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(CanBuild)));				
